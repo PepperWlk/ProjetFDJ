@@ -14,14 +14,13 @@ public static class CombinationLib
     {
         public int value;
         public Vector2[] positions;
-
-        public float droprate;
+        public float chance;
 
         public PatternCombination(Vector2[] pattern, int score, float pourcentage)
         {
             this.positions = pattern;
             this.value = score;
-            this.droprate = pourcentage;
+            this.chance = pourcentage;
         }
     }
 
@@ -38,7 +37,7 @@ public static class CombinationLib
                 new Vector2(0, -2) * gap+ new Vector2(-3, 1)
             }, 
             50,
-            0.1f
+            0.1f / 100
         ),
 
         // Coin haut, droite, bas = 1e
@@ -50,7 +49,7 @@ public static class CombinationLib
                 new Vector2(0, -2) * gap+ new Vector2(-3, 1)
             }, 
             1,
-            20.0f
+            20.0f / 100
         ),
 
         // Coin haut, gauche, bas = 2e
@@ -62,7 +61,7 @@ public static class CombinationLib
                 new Vector2(0, -2) * gap + new Vector2(-3, 1)
             }, 
             2,
-            8.0f
+            8.0f / 100
         ),
 
         // 4 coins + centre = 10000e
@@ -76,7 +75,7 @@ public static class CombinationLib
                 new Vector2(0, 0) * gap + new Vector2(-3, 1)
             }, 
             10000,
-            0.0004f
+            0.0004f / 100
         ),
 
         // Bas, gauche, droite et centre = 100e
@@ -89,7 +88,7 @@ public static class CombinationLib
                 new Vector2(0, 0) * gap + new Vector2(-3, 1)
             }, 
             100,
-            0.02f
+            0.02f / 100
         ),
 
         // Gauche, centre, droite = 10e
@@ -101,9 +100,28 @@ public static class CombinationLib
                 new Vector2(0, 0) * gap + new Vector2(-3, 1)
             }, 
             10,
-            1.0f
+            1.0f / 100
         )
     };
+
+    public static PatternCombination ChoosePattern()
+    {
+        float totalChance = 0f;
+        foreach (var comb in combinations)
+            totalChance += comb.chance;
+
+        float rand = Random.Range(0f, 1f);
+        float cumulative = 0f;
+
+        foreach (var comb in combinations)
+        {
+            cumulative += comb.chance;
+            if (rand < cumulative)
+                return comb;
+        }
+
+        return null; // Aucun pattern sélectionné
+    }
 }
 
 

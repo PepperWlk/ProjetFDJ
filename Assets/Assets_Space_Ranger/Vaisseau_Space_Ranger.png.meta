@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Vaisseau_Space_Ranger_0: -978840541527776459
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

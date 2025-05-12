@@ -197,7 +197,10 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Trou_Noir_0: -846380769616739894
+      Trou_Noir_1: 4273785419205868974
+      Trou_Noir_2: 7183834964528208613
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

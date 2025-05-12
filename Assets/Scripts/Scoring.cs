@@ -46,7 +46,10 @@ public class Scoring : MonoBehaviour
         if (bestMatch != null)
         {
             matchedPatterns.Add(bestMatch.positions);
-            score = bestMatch.value;
+            if (score < bestMatch.value)
+            {
+                score = bestMatch.value;
+            }
             Debug.Log($"Nouveau pattern trouvé, +{bestMatch.value} points !");
             UpdateScoreUI();
         }

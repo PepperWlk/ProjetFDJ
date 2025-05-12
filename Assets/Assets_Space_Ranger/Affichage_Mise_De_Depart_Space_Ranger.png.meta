@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Affichage_Mise_De_Depart_Space_Ranger_0: 5572069665933964195
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -347,7 +347,16 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Asteroid_Explosion_0: 8011239344024379965
+      Asteroid_Explosion_1: -5811125303063291427
+      Asteroid_Explosion_2: -6409245225997768225
+      Asteroid_Explosion_3: 4058075246820688597
+      Asteroid_Explosion_4: -1094396762504395976
+      Asteroid_Explosion_5: 4349077538124596319
+      Asteroid_Explosion_6: 6601912621144566766
+      Asteroid_Explosion_7: -4842450354877066725
+      Asteroid_Explosion_8: -5053419022718365911
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

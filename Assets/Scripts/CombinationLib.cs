@@ -75,7 +75,7 @@ public static class CombinationLib
                 new Vector2(0, 0) * gap + new Vector2(-3, 1)
             }, 
             10000,
-            0.0004f / 100
+            68.0f / 100 // valeur changée pour tester à pas oublier de remettre à 0.0004f 
         ),
 
         // Bas, gauche, droite et centre = 100e
@@ -88,7 +88,7 @@ public static class CombinationLib
                 new Vector2(0, 0) * gap + new Vector2(-3, 1)
             }, 
             100,
-            0.02f / 100
+            0.02f / 100 
         ),
 
         // Gauche, centre, droite = 10e
@@ -106,6 +106,7 @@ public static class CombinationLib
 
     public static PatternCombination ChoosePattern()
     {
+        Debug.Log("Choix du pattern");
         float totalChance = 0f;
         foreach (var comb in combinations)
             totalChance += comb.chance;

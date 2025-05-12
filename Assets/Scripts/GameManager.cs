@@ -19,9 +19,8 @@ public class GameManager : MonoBehaviour
     }
 
     private void SpawnDiamond()
-    {   
-        // Position des tuiles en fonction des vecteurs
-        Vector2[] offsets = new Vector2[]
+    {
+        Vector2[] offsets = new Vector2[] 
         {
             new Vector2(0, 2),
             new Vector2(-1, 1), new Vector2(1, 1),
@@ -30,36 +29,101 @@ public class GameManager : MonoBehaviour
             new Vector2(0, -2)
         };
 
+        // Préparer positions absolues (après application de gap et spawnPosition)
+        List<Vector2> worldPositions = new List<Vector2>();
         foreach (Vector2 offset in offsets)
         {
-            Vector2 position = spawnPosition + offset * gap;
+            worldPositions.Add(spawnPosition + offset * gap);
+        }
 
-            // spawn tuile
+        // Choisir un pattern (ou null)
+        CombinationLib.PatternCombination pattern = CombinationLib.ChoosePattern();
+        Debug.Log("Pattern choisi : " + pattern.value);
+        HashSet<Vector2> patternPositions = new HashSet<Vector2>();
+        int patternPlanetID = -1;
+
+        if (pattern != null)
+        {
+            // Préparer les positions exactes du pattern (après application de gap + spawnPosition)
+            foreach (Vector2 rawPos in pattern.positions)
+            {
+                patternPositions.Add(rawPos);
+            }
+
+            // Choisir un type de planète pour le pattern
+            patternPlanetID = Random.Range(0, planetePrefab.Length);
+        }
+
+        // Nettoyer ancienne liste
+        listPlanet.Clear();
+
+        // Boucle principale de spawn
+        for (int i = 0; i < worldPositions.Count; i++)
+        {
+            Vector2 position = worldPositions[i];
+
+            // 1. Spawn de la tuile
             GameObject tuile = Instantiate(tuilePrefab, position, Quaternion.identity);
 
-            // Gestion spawn planete et récupération pour la comparaison
-            GameObject prefabToSpawn = planetePrefab[Random.Range(0, planetePrefab.Length)];
-            GameObject planete = Instantiate(prefabToSpawn, position, Quaternion.identity);
-            Debug.Log("Spawned planet with ID: " + planete.GetComponent<Planet>().id);
-            planete.SetActive(false);
-            listPlanet.Add(planete);
-            
+            // 2. Déterminer quelle planète à instancier
+            int chosenPlanetID;
+            if (pattern != null && patternPositions.Contains(position))
+            {
+                chosenPlanetID = patternPlanetID; // planète du pattern
+            }
+            else
+            {
+                // Choisir une planète au hasard sauf celle du pattern
+                do
+                {
+                    chosenPlanetID = Random.Range(0, planetePrefab.Length);
+                } while (pattern != null && chosenPlanetID == patternPlanetID);
+            }
 
-            // Gestion spawn asteroid et linkage à la planète spécifique
+            GameObject planet = Instantiate(planetePrefab[chosenPlanetID], position, Quaternion.identity);
+            planet.SetActive(false);
+            listPlanet.Add(planet);
+
+            // 3. Spawn d’un astéroïde et lien
             GameObject asteroidPrefab = Caillouprefab[Random.Range(0, Caillouprefab.Length)];
             GameObject asteroid = Instantiate(asteroidPrefab, position, Quaternion.identity);
 
             Asteroid asteroidScript = asteroid.GetComponent<Asteroid>();
-            if (asteroidScript != null){
-                asteroidScript.setLinkedPlanet(planete);
+            if (asteroidScript != null)
+            {
+                asteroidScript.setLinkedPlanet(planet);
                 asteroidScript.scoreScript = scoringScript;
             }
-
-
         }
+
         if (scoringScript != null)
         {
             scoringScript.Allplanets = listPlanet;
         }
     }
+
+
+
+    private void SpawnTuileEtPlanete(Vector2 position, GameObject planetPrefabToUse)
+    {
+        // Spawn tuile
+        Instantiate(tuilePrefab, position, Quaternion.identity);
+
+        // Spawn planète
+        GameObject planet = Instantiate(planetPrefabToUse, position, Quaternion.identity);
+        planet.SetActive(false);
+        listPlanet.Add(planet);
+
+        // Spawn astéroïde
+        GameObject asteroidPrefab = Caillouprefab[Random.Range(0, Caillouprefab.Length)];
+        GameObject asteroid = Instantiate(asteroidPrefab, position, Quaternion.identity);
+
+        Asteroid asteroidScript = asteroid.GetComponent<Asteroid>();
+        if (asteroidScript != null)
+        {
+            asteroidScript.setLinkedPlanet(planet);
+            asteroidScript.scoreScript = scoringScript;
+        }
+    }
+
 }

@@ -7,7 +7,6 @@ public class Scoring : MonoBehaviour
     public List<GameObject> Allplanets;
     [SerializeField] private float score = 0;
     public TMP_Text scoreValue;
-
     private List<Vector2[]> matchedPatterns = new List<Vector2[]>();
 
     public void checkPatterns()
@@ -106,7 +105,7 @@ public class Scoring : MonoBehaviour
     {
         if (scoreValue != null)
         {
-            scoreValue.text = "Score :" + score.ToString();
+            scoreValue.text = "Gain : " + score.ToString() +"€";
         }
     }
 }

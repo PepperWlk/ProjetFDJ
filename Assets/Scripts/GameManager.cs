@@ -38,7 +38,15 @@ public class GameManager : MonoBehaviour
 
         // Choisir un pattern (ou null)
         CombinationLib.PatternCombination pattern = CombinationLib.ChoosePattern();
-        Debug.Log("Pattern choisi : " + pattern.value);
+        if (pattern != null)
+        {
+            Debug.Log("Pattern choisi : " + pattern.value);
+        }
+        else
+        {
+            Debug.Log("Aucun pattern choisi");
+        }
+
         HashSet<Vector2> patternPositions = new HashSet<Vector2>();
         int patternPlanetID = -1;
 
@@ -52,6 +60,11 @@ public class GameManager : MonoBehaviour
 
             // Choisir un type de planète pour le pattern
             patternPlanetID = Random.Range(0, planetePrefab.Length);
+        }
+        else
+        {
+            Debug.Log("Aucun pattern choisi");
+
         }
 
         // Nettoyer ancienne liste

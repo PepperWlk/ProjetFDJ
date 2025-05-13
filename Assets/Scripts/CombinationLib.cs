@@ -12,9 +12,9 @@ public static class CombinationLib
 
     public class PatternCombination 
     {
-        public int value;
-        public Vector2[] positions;
-        public float chance;
+        public int value; // gain
+        public Vector2[] positions; // liste des positions 
+        public float chance; // probabilité de tomber sur ce pattern
 
         public PatternCombination(Vector2[] pattern, int score, float pourcentage)
         {
@@ -37,7 +37,7 @@ public static class CombinationLib
                 new Vector2(0, -2) * gap+ new Vector2(-3, 1)
             }, 
             50,
-            0.1f / 100
+            0.0f / 100 
         ),
 
         // Coin haut, droite, bas = 1e
@@ -49,7 +49,7 @@ public static class CombinationLib
                 new Vector2(0, -2) * gap+ new Vector2(-3, 1)
             }, 
             1,
-            20.0f / 100
+            0.0f / 100
         ),
 
         // Coin haut, gauche, bas = 2e
@@ -61,7 +61,7 @@ public static class CombinationLib
                 new Vector2(0, -2) * gap + new Vector2(-3, 1)
             }, 
             2,
-            8.0f / 100
+            0.0f / 100
         ),
 
         // 4 coins + centre = 10000e
@@ -75,7 +75,7 @@ public static class CombinationLib
                 new Vector2(0, 0) * gap + new Vector2(-3, 1)
             }, 
             10000,
-            68.0f / 100 // valeur changée pour tester à pas oublier de remettre à 0.0004f 
+            0.0f / 100 // valeur changée pour tester à pas oublier de remettre à 0.0004f 
         ),
 
         // Bas, gauche, droite et centre = 100e
@@ -88,7 +88,7 @@ public static class CombinationLib
                 new Vector2(0, 0) * gap + new Vector2(-3, 1)
             }, 
             100,
-            0.02f / 100 
+            0.0f / 100 
         ),
 
         // Gauche, centre, droite = 10e
@@ -100,7 +100,7 @@ public static class CombinationLib
                 new Vector2(0, 0) * gap + new Vector2(-3, 1)
             }, 
             10,
-            1.0f / 100
+            0.0f / 100
         )
     };
 
@@ -122,6 +122,29 @@ public static class CombinationLib
         }
 
         return null; // Aucun pattern sélectionné
+    }
+
+    public static float SecondChancePattern()
+    {
+        // check si il gagne un gain direct ou pas
+        float score;
+        float secondChance4 = 1f; // 3 chance sur 100 d'avoir 4e
+        float secondChance500 = 0.5f; // 0.002 chance sur 100 d'avoir 500e
+        if (Random.value < secondChance4 && Random.value > secondChance500)
+        {
+            score = 4;
+            Debug.Log("Gain de 4e");
+        }
+        else if (Random.value < secondChance500)
+        {
+            score = 500;
+            Debug.Log("Gain de 500e");
+        }
+        else
+        {
+            return 0;
+        }
+        return score;
     }
 }
 

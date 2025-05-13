@@ -32,7 +32,7 @@ public class Asteroid : MonoBehaviour
 
             if (scoreScript != null)
             {
-                scoreScript.checkPatterns();
+                scoreScript.RegisterDestroyedAsteroid();
             }
         }
     }

@@ -9,8 +9,12 @@ public class Scoring : MonoBehaviour
     public TMP_Text scoreValue;
     private List<Vector2[]> matchedPatterns = new List<Vector2[]>();
 
+    public int totalAsteroid = 9;
+    [SerializeField] private int DestroyedAsteroid = 0;
+
     public void checkPatterns()
     {
+        bool  haspattern = false;
         Dictionary<Vector2, Planet> planetMap = new Dictionary<Vector2, Planet>();
 
         foreach (GameObject planetobj in Allplanets)
@@ -39,6 +43,7 @@ public class Scoring : MonoBehaviour
                         bestMatch = pattern;
                     }
                 }
+                haspattern = true;
             }
         }
 
@@ -51,6 +56,17 @@ public class Scoring : MonoBehaviour
             }
             Debug.Log($"Nouveau pattern trouvé, +{bestMatch.value} points !");
             UpdateScoreUI();
+        }
+
+        if (!haspattern)
+        {
+            float secondchancescore = CombinationLib.SecondChancePattern();
+            if (score < secondchancescore)
+            {
+                score = secondchancescore;
+                Debug.Log($"Chance ! +{secondchancescore} points !");
+                UpdateScoreUI();
+            }
         }
     }
 
@@ -106,6 +122,16 @@ public class Scoring : MonoBehaviour
         if (scoreValue != null)
         {
             scoreValue.text = "Gain : " + score.ToString() +"€";
+        }
+    }
+
+    public void RegisterDestroyedAsteroid()
+    {
+        DestroyedAsteroid++;
+        if (DestroyedAsteroid >= totalAsteroid)
+        {
+            Debug.Log("Fin du jeu");
+            checkPatterns();
         }
     }
 }

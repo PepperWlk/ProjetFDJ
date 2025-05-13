@@ -130,12 +130,13 @@ public static class CombinationLib
         float score;
         float secondChance4 = 1f; // 3 chance sur 100 d'avoir 4e
         float secondChance500 = 0.5f; // 0.002 chance sur 100 d'avoir 500e
-        if (Random.value < secondChance4 && Random.value > secondChance500)
+        float randomValue = Random.value;
+        if (randomValue < secondChance4 && randomValue > secondChance500)
         {
             score = 4;
             Debug.Log("Gain de 4e");
         }
-        else if (Random.value < secondChance500)
+        else if (randomValue < secondChance500)
         {
             score = 500;
             Debug.Log("Gain de 500e");

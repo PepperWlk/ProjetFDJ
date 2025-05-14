@@ -36,11 +36,11 @@ public static class CombinationLib
                 new Vector2(2, 0) * gap+ new Vector2(-3, 1), 
                 new Vector2(0, -2) * gap+ new Vector2(-3, 1)
             }, 
-            50,
+            10,
             0.0f / 100 
         ),
 
-        // Coin haut, droite, bas = 1e
+        // Coin haut, gauche, bas = 1e
         new PatternCombination(
             new Vector2[] 
             {
@@ -52,7 +52,7 @@ public static class CombinationLib
             0.0f / 100
         ),
 
-        // Coin haut, gauche, bas = 2e
+        // Coin haut, droite, bas = 2e
         new PatternCombination(
             new Vector2[]
             {
@@ -87,7 +87,7 @@ public static class CombinationLib
                 new Vector2(0, -2) * gap + new Vector2(-3, 1), 
                 new Vector2(0, 0) * gap + new Vector2(-3, 1)
             }, 
-            100,
+            1000,
             0.0f / 100 
         ),
 
@@ -99,7 +99,33 @@ public static class CombinationLib
                 new Vector2(2, 0) * gap + new Vector2(-3, 1), 
                 new Vector2(0, 0) * gap + new Vector2(-3, 1)
             }, 
-            10,
+            5,
+            0.0f / 100
+        ),
+
+        // Haut, droite, centre, gauche = 500e
+        new PatternCombination(
+            new Vector2[]
+            {
+                new Vector2(0,0) * gap + new Vector2(-3, 1),
+                new Vector2(-2, 0) * gap + new Vector2(-3, 1),
+                new Vector2(2, 0) * gap + new Vector2(-3, 1),
+                new Vector2(0, 2) * gap + new Vector2(-3, 1),
+            }, 
+            500,
+            0.0f / 100
+        ),
+
+        // diagnonale = 100e
+        new PatternCombination(
+            new Vector2[]
+            {
+                new Vector2(-1, -1) * gap + new Vector2(-3, 1), 
+                new Vector2(1, -1) * gap + new Vector2(-3, 1), 
+                new Vector2(-1, 1) * gap + new Vector2(-3, 1),
+                new Vector2(1, 1) * gap + new Vector2(-3, 1)
+            }, 
+            100,
             0.0f / 100
         )
     };

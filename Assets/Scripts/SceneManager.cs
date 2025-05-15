@@ -8,6 +8,8 @@ public class SceneManagement : MonoBehaviour
         SceneManager.LoadScene(sceneName);
     }
 
+    // Méthode pour charger une scène spécifique
+
     public static void QuitGame()
     {
         // If the game is running in the editor, stop play mode

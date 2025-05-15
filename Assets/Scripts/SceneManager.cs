@@ -46,9 +46,9 @@ public class SceneManagement : MonoBehaviour
         LoadScene("MainMenu");
     }
 
-    public static void LoadGameOver()
+    public static void LoadBonusScene()
     {
-        LoadScene("EndScene");
+        LoadScene("BonusScene");
     }
 
     public static void LoadRuleScene()

@@ -132,6 +132,7 @@ public class Scoring : MonoBehaviour
         {
             Debug.Log("Fin du jeu");
             checkPatterns();
+            SceneManagement.LoadBonusScene();
         }
     }
 }

@@ -265,7 +265,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 121267823}
-  - component: {fileID: 121267822}
+  - component: {fileID: 121267824}
   m_Layer: 0
   m_Name: CircleSpawner
   m_TagString: Untagged
@@ -273,31 +273,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &121267822
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 121267821}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ac5cd4fe41c97a4c8234da8df682c0f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Caillouprefab:
-  - {fileID: 1147450456966301311, guid: 9b5c5db9d51d8b74b8fa61ddbabd0acb, type: 3}
-  planetePrefab:
-  - {fileID: 8371328623135771920, guid: b66516489daca954ca189f3276515578, type: 3}
-  - {fileID: 7114427953263354430, guid: b649614cc5fe6494496b1e9cb6dd6c0f, type: 3}
-  - {fileID: 3021843610315487655, guid: 522272c47bfd0ba449649e3d776153b5, type: 3}
-  - {fileID: 1008868446691791385, guid: d0ac1b6c6e6f2d84ba13c74ad49305e3, type: 3}
-  - {fileID: 6343679043826193993, guid: a52a81c33bcbcd54986b1fa9b2f620c5, type: 3}
-  - {fileID: 2492265905385510704, guid: f15f7f6802e07e246a5f4bfcd1f1227f, type: 3}
-  - {fileID: 7841218478681359464, guid: df3fd625f193a2e449de897e735466c2, type: 3}
-  - {fileID: 756926540473479809, guid: 43036db93d963d449a53335c3b936819, type: 3}
-  - {fileID: 6626715248056833749, guid: d3eb6f0f1ac264d4abca6ebbac5eb5a2, type: 3}
-  scoringScript: {fileID: 1961081983}
 --- !u!4 &121267823
 Transform:
   m_ObjectHideFlags: 0
@@ -313,6 +288,31 @@ Transform:
   m_Children: []
   m_Father: {fileID: 261482905}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &121267824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 121267821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f99d9a5b53ec1a94e8d368f5ec327403, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bonusPlanetePrefab:
+  - {fileID: 8371328623135771920, guid: b66516489daca954ca189f3276515578, type: 3}
+  - {fileID: 7114427953263354430, guid: b649614cc5fe6494496b1e9cb6dd6c0f, type: 3}
+  - {fileID: 3021843610315487655, guid: 522272c47bfd0ba449649e3d776153b5, type: 3}
+  - {fileID: 1008868446691791385, guid: d0ac1b6c6e6f2d84ba13c74ad49305e3, type: 3}
+  - {fileID: 6343679043826193993, guid: a52a81c33bcbcd54986b1fa9b2f620c5, type: 3}
+  - {fileID: 2492265905385510704, guid: f15f7f6802e07e246a5f4bfcd1f1227f, type: 3}
+  - {fileID: 7841218478681359464, guid: df3fd625f193a2e449de897e735466c2, type: 3}
+  - {fileID: 756926540473479809, guid: 43036db93d963d449a53335c3b936819, type: 3}
+  - {fileID: 6626715248056833749, guid: d3eb6f0f1ac264d4abca6ebbac5eb5a2, type: 3}
+  bonusCaillouPrefab:
+  - {fileID: 1147450456966301311, guid: 9b5c5db9d51d8b74b8fa61ddbabd0acb, type: 3}
+  scoringScript: {fileID: 1961081983}
 --- !u!1 &164668725
 GameObject:
   m_ObjectHideFlags: 0

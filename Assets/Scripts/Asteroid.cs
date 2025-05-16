@@ -4,15 +4,6 @@ public class Asteroid : MonoBehaviour
 {   
     private GameObject linkedPlanet;
     public Scoring scoreScript;
-    private void Start()
-    {
-
-    }
-
-    private void Update()
-    {
-        
-    }
 
     public void setLinkedPlanet (GameObject planete)
     {

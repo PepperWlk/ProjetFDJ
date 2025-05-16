@@ -7,23 +7,23 @@ public class Scoring : MonoBehaviour
     public List<GameObject> Allplanets;
     [SerializeField] private float score = 0;
     public TMP_Text scoreValue;
-    private List<Vector2[]> matchedPatterns = new List<Vector2[]>();
 
     public int totalAsteroid = 9;
     [SerializeField] private int DestroyedAsteroid = 0;
 
+    private List<Vector2[]> matchedPatterns = new List<Vector2[]>();
+
     public void checkPatterns()
     {
-        bool  haspattern = false;
         Dictionary<Vector2, Planet> planetMap = new Dictionary<Vector2, Planet>();
 
-        foreach (GameObject planetobj in Allplanets)
+        foreach (GameObject planetObj in Allplanets)
         {
-            if (planetobj.activeInHierarchy)
+            if (planetObj.activeInHierarchy)
             {
-                Vector2 pos = RoundPosition(planetobj.transform.position);
-                Planet p = planetobj.GetComponent<Planet>();
-                if (p != null && !planetMap.ContainsKey(pos))
+                Vector2 pos = RoundPosition(planetObj.transform.position);
+                Planet p = planetObj.GetComponent<Planet>();
+                if (p != null)
                 {
                     planetMap[pos] = p;
                 }
@@ -32,96 +32,78 @@ public class Scoring : MonoBehaviour
 
         CombinationLib.PatternCombination bestMatch = null;
 
-        foreach (CombinationLib.PatternCombination pattern in CombinationLib.combinations)
+        foreach (var pattern in CombinationLib.combinations)
         {
-            if (IsMatch(pattern.positions, planetMap))
+            if (!HasBeenMatched(pattern.positions) && IsPatternMatched(pattern.positions, planetMap))
             {
-                if (!HasBeenMatched(pattern.positions))
+                if (bestMatch == null || pattern.value > bestMatch.value)
                 {
-                    if (bestMatch == null || pattern.value > bestMatch.value)
-                    {
-                        bestMatch = pattern;
-                    }
+                    bestMatch = pattern;
                 }
-                haspattern = true;
             }
         }
 
         if (bestMatch != null)
         {
             matchedPatterns.Add(bestMatch.positions);
-            if (score < bestMatch.value)
-            {
-                score = bestMatch.value;
-            }
-            Debug.Log($"Nouveau pattern trouvé, +{bestMatch.value} points !");
+            score = Mathf.Max(score, bestMatch.value);
+            Debug.Log($"✔️ Pattern trouvé: +{bestMatch.value}€");
             UpdateScoreUI();
         }
-
-        if (!haspattern)
+        else
         {
-            float secondchancescore = CombinationLib.SecondChancePattern();
-            if (score < secondchancescore)
+            float chanceScore = CombinationLib.SecondChancePattern();
+            if (chanceScore > score)
             {
-                score = secondchancescore;
-                Debug.Log($"Chance ! +{secondchancescore} points !");
+                score = chanceScore;
+                Debug.Log($"🎲 Bonus aléatoire: +{chanceScore}€");
                 UpdateScoreUI();
+            }
+            else
+            {
+                Debug.Log("❌ Aucun pattern détecté.");
             }
         }
     }
 
-    private bool IsMatch(Vector2[] pattern, Dictionary<Vector2, Planet> map)
+    private bool IsPatternMatched(Vector2[] pattern, Dictionary<Vector2, Planet> map)
     {
-        Planet first = null;
-        foreach (Vector2 pos in pattern)
+        Planet reference = null;
+        foreach (Vector2 rawPos in pattern)
         {
-            Vector2 roundedPos = RoundPosition(pos);
-            if (!map.TryGetValue(roundedPos, out Planet planet))
-            {
-                return false;
-            }
+            Vector2 pos = RoundPosition(rawPos);
+            if (!map.TryGetValue(pos, out Planet p)) return false;
 
-            if (first == null)
-            {
-                first = planet;
-            }
-            else if (planet.id != first.id)
-            {
-                return false;
-            }
+            if (reference == null) reference = p;
+            else if (p.id != reference.id) return false;
         }
         return true;
     }
 
     private bool HasBeenMatched(Vector2[] pattern)
     {
-        foreach (Vector2[] matched in matchedPatterns)
+        foreach (var matched in matchedPatterns)
         {
-            if (ArePatternsEqual(pattern, matched))
-                return true;
+            if (ArePatternsEqual(matched, pattern)) return true;
         }
         return false;
     }
 
     private bool ArePatternsEqual(Vector2[] a, Vector2[] b)
     {
-        if (a.Length != b.Length) return false;
-
-        HashSet<Vector2> setA = new HashSet<Vector2>(a);
-        HashSet<Vector2> setB = new HashSet<Vector2>(b);
-        return setA.SetEquals(setB);
+        return new HashSet<Vector2>(a).SetEquals(b);
     }
 
     private Vector2 RoundPosition(Vector2 position)
     {
-        return new Vector2(Mathf.Round(position.x * 100f) / 100f, Mathf.Round(position.y * 100f) / 100f);
+        return new Vector2(Mathf.Round(position.x), Mathf.Round(position.y));
     }
 
     private void UpdateScoreUI()
     {
         if (scoreValue != null)
         {
-            scoreValue.text = "Gain : " + score.ToString() +"€";
+            scoreValue.text = $"Gain : {score}€";
         }
     }
 
@@ -130,9 +112,9 @@ public class Scoring : MonoBehaviour
         DestroyedAsteroid++;
         if (DestroyedAsteroid >= totalAsteroid)
         {
-            Debug.Log("Fin du jeu");
+            Debug.Log("🚀 Fin du niveau - Vérification des patterns...");
             checkPatterns();
-            SceneManagement.LoadBonusScene();
+            SceneManagement.LoadBonusScene(); // ou ton système de transition
         }
     }
 }

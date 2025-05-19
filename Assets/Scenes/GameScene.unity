@@ -267,7 +267,7 @@ GameObject:
   - component: {fileID: 121267823}
   - component: {fileID: 121267822}
   m_Layer: 0
-  m_Name: CircleSpawner
+  m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1198,6 +1198,51 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentPlanet: {fileID: 0}
+--- !u!1 &808700665
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 808700667}
+  - component: {fileID: 808700666}
+  m_Layer: 0
+  m_Name: GlobalManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &808700666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 808700665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9537a42b2a855f43a1e5880b1054df6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  score: 0
+--- !u!4 &808700667
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 808700665}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.57985, y: -0.071, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1024174106
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3035,8 +3080,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f51b05e31629b744b0b43343db38fc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentPhase: 0
   Allplanets: []
-  score: 0
   scoreValue: {fileID: 493959352}
   totalAsteroid: 9
   DestroyedAsteroid: 0
@@ -3195,3 +3240,4 @@ SceneRoots:
   - {fileID: 1852332969}
   - {fileID: 261482905}
   - {fileID: 685727387}
+  - {fileID: 808700667}

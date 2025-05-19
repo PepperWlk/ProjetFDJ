@@ -56,4 +56,9 @@ public class SceneManagement : MonoBehaviour
         LoadScene("RuleScene");
     }
 
+    public static void LoadGameOver()
+    {
+        LoadScene("GameOver");
+    }
+
 }

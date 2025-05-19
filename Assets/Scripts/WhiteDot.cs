@@ -23,10 +23,31 @@ public class WhiteDot : MonoBehaviour
     private void setUpSpawnPosition()
     {
         HashSet<Vector2> positions = new HashSet<Vector2>();
+        
+        // Définir les offsets pour dessiner un pattern autour du point central
+        Vector2[] offsets = new Vector2[]
+        {
+        new Vector2(0, 0),      // centre
+        new Vector2(20, 0),     // droite
+        new Vector2(-20, 0),    // gauche
+        new Vector2(0, 20),     // haut
+        new Vector2(0, -20),    // bas
+        new Vector2(20, 20),    // haut droite
+        new Vector2(-20, 20),   // haut gauche
+        new Vector2(20, -20),   // bas droite
+        new Vector2(-20, -20)   // bas gauche
+        };
         foreach (GameObject dot in grilled)
         {
-            Vector2 pos = dot.GetComponent<Transform>().position;
+            Vector2 centerPos = dot.GetComponent<RectTransform>().anchoredPosition;
             
+            foreach (var offset in offsets)
+            {
+            Vector2 spawnPos = centerPos + offset;
+            GameObject greydot = Instantiate(greydotPrefab, Vector3.zero, Quaternion.identity);
+            greydot.transform.SetParent(transform);
+            greydot.GetComponent<RectTransform>().anchoredPosition = spawnPos;
+            }
         }
     }
 

@@ -1,117 +1,183 @@
-using UnityEngine;
 using System.Collections.Generic;
-using NUnit.Framework.Internal;
-using UnityEngine.InputSystem.iOS;
+using UnityEngine;
 
-
-public static class CombinationLib 
+public static class CombinationLib
 {
-    // Gap de 1.8 pour l'espacement des positions (Modifié dans l'éditeur!)
-    // l'addition d'un vector2(-3, 1) = la position de spawn c.f gamemanager.cs
-    private const float gap = 1.8f;
-
-    public class PatternCombination 
+    public class PatternCombination
     {
-        public int value; // gain
-        public Vector2[] positions; // liste des positions 
-        public float chance; // probabilité de tomber sur ce pattern
+        public Vector2[] positions;
+        public int value;
+        public float chance;
 
-        public PatternCombination(Vector2[] pattern, int score, float pourcentage)
+        public PatternCombination(Vector2[] positions, int value, float chance)
         {
-            this.positions = pattern;
-            this.value = score;
-            this.chance = pourcentage;
+            this.positions = positions;
+            this.value = value;
+            this.chance = chance;
         }
     }
 
     public static readonly List<PatternCombination> combinations = new List<PatternCombination>
     {
-        
-        // 4 coins = 50e
+        // Croix : haut, bas, gauche, droite autour de (-3, -1)
         new PatternCombination(
-            new Vector2[] 
+            new Vector2[]
             {
-                new Vector2(0, 2) * gap + new Vector2(-3, 1), 
-                new Vector2(-2, 0) * gap+ new Vector2(-3, 1), 
-                new Vector2(2, 0) * gap+ new Vector2(-3, 1), 
-                new Vector2(0, -2) * gap+ new Vector2(-3, 1)
-            }, 
-            50,
-            0.0f / 100 
-        ),
-
-        // Coin haut, droite, bas = 1e
-        new PatternCombination(
-            new Vector2[] 
-            {
-                new Vector2(0, 2) * gap+ new Vector2(-3, 1), 
-                new Vector2(-2, 0) * gap+ new Vector2(-3, 1), 
-                new Vector2(0, -2) * gap+ new Vector2(-3, 1)
-            }, 
+                new Vector2(-3, 3), // haut
+                new Vector2(-3, -5), // bas
+                new Vector2(-9, -1), // gauche
+            },
             1,
-            0.0f / 100
+            0.40f
         ),
 
-        // Coin haut, gauche, bas = 2e
+        // Ligne horizontale au centre
         new PatternCombination(
             new Vector2[]
             {
-                new Vector2(0, 2) * gap + new Vector2(-3, 1), 
-                new Vector2(2, 0) * gap + new Vector2(-3, 1), 
-                new Vector2(0, -2) * gap + new Vector2(-3, 1)
-            }, 
-            2,
-            0.0f / 100
+                new Vector2(-9 , -1),
+                new Vector2(-3, -1),
+                new Vector2(3, -1)
+            },
+            5,
+            0.10f
         ),
 
-        // 4 coins + centre = 10000e
+        // carré diagonal
         new PatternCombination(
             new Vector2[]
             {
-                new Vector2(0, 2) * gap + new Vector2(-3, 1), 
-                new Vector2(-2, 0) * gap + new Vector2(-3, 1), 
-                new Vector2(2, 0) * gap + new Vector2(-3, 1), 
-                new Vector2(0, -2) * gap + new Vector2(-3, 1), 
-                new Vector2(0, 0) * gap + new Vector2(-3, 1)
-            }, 
-            10000,
-            0.0f / 100 // valeur changée pour tester à pas oublier de remettre à 0.0004f 
-        ),
-
-        // Bas, gauche, droite et centre = 100e
-        new PatternCombination(
-            new Vector2[]
-            {
-                new Vector2(-2, 0) * gap + new Vector2(-3, 1), 
-                new Vector2(2, 0) * gap + new Vector2(-3, 1), 
-                new Vector2(0, -2) * gap + new Vector2(-3, 1), 
-                new Vector2(0, 0) * gap + new Vector2(-3, 1)
-            }, 
+                new Vector2(0, 1),
+                new Vector2(-6, -3),
+                new Vector2(0 , -3),
+                new Vector2(-6, 1)
+            },
             100,
-            0.0f / 100 
+            0.005f
         ),
 
-        // Gauche, centre, droite = 10e
+        // Diagonale haut-gauche → bas-droite
         new PatternCombination(
             new Vector2[]
             {
-                new Vector2(-2, 0) * gap + new Vector2(-3, 1), 
-                new Vector2(2, 0) * gap + new Vector2(-3, 1), 
-                new Vector2(0, 0) * gap + new Vector2(-3, 1)
-            }, 
+                new Vector2(-3, 3),
+                new Vector2(3, -1),
+                new Vector2(-3, -5)
+            },
+            2,
+            0.30f
+        ),
+
+        // Full centre + croix
+        new PatternCombination(
+            new Vector2[]
+            {
+                new Vector2(-3, 3),
+                new Vector2(-9, -1),
+                new Vector2(3, -1),
+                new Vector2(-3, -5)
+            },
             10,
-            0.0f / 100
+            0.05f
+        ),
+
+        new PatternCombination(
+            new Vector2[]
+            {
+                new Vector2(-9, -1),
+                new Vector2(-3, -1),
+                new Vector2(3, -1),
+                new Vector2(-3, -5)
+            },
+            1000,
+            0.001f
+        ),
+
+        // Full centre + croix
+        new PatternCombination(
+            new Vector2[]
+            {
+                new Vector2(-3, 3),
+                new Vector2(-9, -1),
+                new Vector2(-3, -1),
+                new Vector2(3, -1),
+            },
+            500,
+            0.0005f
+        ),
+
+        new PatternCombination(
+            new Vector2[]
+            {
+                new Vector2(-3, 3),
+                new Vector2(-9, -1),
+                new Vector2(-3, -1),
+                new Vector2(3, -1),
+                new Vector2(-3, -5)
+            },
+            10000,
+            0.0001f
         )
+    };
+
+    public static readonly List<PatternCombination> bonuscombinations = new List<PatternCombination>
+    {
+        // Bonus simple : paire horizontale
+        new PatternCombination(
+            new Vector2[]
+            {
+                new Vector2(-9, -1),
+                new Vector2(3, -1)
+            },
+            2,
+            0.15f
+        ),
+
+        // Bonus diagonale courte
+        new PatternCombination(
+            new Vector2[]
+            {
+                new Vector2(-3, 3),
+                new Vector2(-3, -1),
+                new Vector2(-3, -5)
+            },
+            10,
+            0.10f
+        ),
+
+        new PatternCombination
+        (
+            new Vector2[]
+            {
+                new Vector2 (-3, 3),
+                new Vector2 (0, 1),
+                new Vector2 (-6, 1)
+            },
+            1,
+            0.70f
+        ),
+
+        // carré diagonal
+        new PatternCombination(
+            new Vector2[]
+            {
+                new Vector2(0, 1),
+                new Vector2(-6, -3),
+                new Vector2(0 , -3),
+                new Vector2(-6, 1)
+            },
+            1000,
+            0.005f
+        ),
     };
 
     public static PatternCombination ChoosePattern()
     {
-        Debug.Log("Choix du pattern");
         float totalChance = 0f;
         foreach (var comb in combinations)
             totalChance += comb.chance;
 
-        float rand = Random.Range(0f, 1f);
+        float rand = Random.value;
         float cumulative = 0f;
 
         foreach (var comb in combinations)
@@ -121,38 +187,50 @@ public static class CombinationLib
                 return comb;
         }
 
-        return null; // Aucun pattern sélectionné
+        return null;
+    }
+
+    public static PatternCombination ChooseBonusPattern()
+    {
+        float totalChance = 0f;
+        foreach (var comb in bonuscombinations)
+            totalChance += comb.chance;
+
+        float rand = Random.value;
+        float cumulative = 0f;
+
+        foreach (var comb in bonuscombinations)
+        {
+            cumulative += comb.chance;
+            if (rand < cumulative)
+                return comb;
+        }
+
+        return null;
     }
 
     public static float SecondChancePattern()
     {
-        // check si il gagne un gain direct ou pas
         float score;
-        float secondChance4 = 1f; // 3 chance sur 100 d'avoir 4e
-        float secondChance500 = 0.5f; // 0.002 chance sur 100 d'avoir 500e
+        float secondChance4 = 0.03f;
+        float secondChance500 = 0.0002f;
         float randomValue = Random.value;
-        if (randomValue < secondChance4 && randomValue > secondChance500)
-        {
-            score = 4;
-            Debug.Log("Gain de 4e");
-        }
-        else if (randomValue < secondChance500)
+
+        if (randomValue < secondChance500)
         {
             score = 500;
-            Debug.Log("Gain de 500e");
+            Debug.Log("Gain exceptionnel de 500€ !");
+        }
+        else if (randomValue < secondChance500 + secondChance4)
+        {
+            score = 4;
+            Debug.Log("Gain de 4€ !");
         }
         else
         {
             return 0;
         }
+
         return score;
     }
 }
-
-
-    // Disposition des tuiles avec les planetes (donc pos des planetes)
-    //                  new Vector2(0, 2),
-    //         new Vector2(-1, 1), new Vector2(1, 1),
-    //  new Vector2(-2, 0), new Vector2(0, 0), new Vector2(2, 0),
-    //       new Vector2(-1, -1), new Vector2(1, -1),
-    //                 new Vector2(0, -2)

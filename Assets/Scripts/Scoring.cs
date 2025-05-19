@@ -69,12 +69,21 @@ public class Scoring : MonoBehaviour
     {
         matchedPatterns.Add(bestMatch.positions);
 
-        if (ScoreManager.Instance.GetScore() < bestMatch.value)
+        float currentScore = ScoreManager.Instance.GetScore();
+        float newScore;
+
+        if (currentPhase == Phase.Normal)
         {
-            ScoreManager.Instance.SetScore(bestMatch.value);
-            Debug.Log($"Nouveau pattern trouvé, +{bestMatch.value} points !");
-            UpdateScoreUI(bestMatch.value);
+            newScore = Mathf.Max(currentScore, bestMatch.value); // garder le plus élevé
         }
+        else // Phase.Bonus
+        {
+            newScore = currentScore + bestMatch.value; // additionner
+        }
+
+        ScoreManager.Instance.SetScore(newScore);
+        Debug.Log($"Pattern trouvé ({currentPhase}) : +{bestMatch.value} points !");
+        UpdateScoreUI(newScore);
     }
 
     // Sinon, chance secondaire

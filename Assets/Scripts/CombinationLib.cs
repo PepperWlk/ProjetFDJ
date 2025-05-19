@@ -154,7 +154,7 @@ public static class CombinationLib
                 new Vector2 (-6, 1)
             },
             1,
-            0.20f
+            0.70f
         ),
 
         // carré diagonal

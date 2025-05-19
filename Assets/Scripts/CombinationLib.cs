@@ -190,6 +190,25 @@ public static class CombinationLib
         return null;
     }
 
+    public static PatternCombination ChooseBonusPattern()
+    {
+        float totalChance = 0f;
+        foreach (var comb in bonuscombinations)
+            totalChance += comb.chance;
+
+        float rand = Random.value;
+        float cumulative = 0f;
+
+        foreach (var comb in bonuscombinations)
+        {
+            cumulative += comb.chance;
+            if (rand < cumulative)
+                return comb;
+        }
+
+        return null;
+    }
+
     public static float SecondChancePattern()
     {
         float score;

@@ -4,71 +4,91 @@ using TMPro;
 
 public class Scoring : MonoBehaviour
 {
+    public enum Phase
+    {
+        Normal,
+        Bonus,
+    }
+    public Phase currentPhase = Phase.Normal;
     public List<GameObject> Allplanets;
-    [SerializeField] private float score = 0;
     public TMP_Text scoreValue;
     private List<Vector2[]> matchedPatterns = new List<Vector2[]>();
 
     public int totalAsteroid = 9;
     [SerializeField] private int DestroyedAsteroid = 0;
 
-    public void checkPatterns()
+    private void Start()
     {
-        bool  haspattern = false;
-        Dictionary<Vector2, Planet> planetMap = new Dictionary<Vector2, Planet>();
+        UpdateScoreUI(ScoreManager.Instance.GetScore());
+    }
 
-        foreach (GameObject planetobj in Allplanets)
+    public void checkPatterns()
+{
+    bool hasPattern = false;
+    Dictionary<Vector2, Planet> planetMap = new Dictionary<Vector2, Planet>();
+
+    // Construction du planetMap
+    foreach (GameObject planetObj in Allplanets)
+    {
+        if (planetObj.activeInHierarchy)
         {
-            if (planetobj.activeInHierarchy)
+            Vector2 pos = RoundPosition(planetObj.transform.position);
+            Planet p = planetObj.GetComponent<Planet>();
+            if (p != null && !planetMap.ContainsKey(pos))
             {
-                Vector2 pos = RoundPosition(planetobj.transform.position);
-                Planet p = planetobj.GetComponent<Planet>();
-                if (p != null && !planetMap.ContainsKey(pos))
-                {
-                    planetMap[pos] = p;
-                }
-            }
-        }
-
-        CombinationLib.PatternCombination bestMatch = null;
-
-        foreach (CombinationLib.PatternCombination pattern in CombinationLib.combinations)
-        {
-            if (IsMatch(pattern.positions, planetMap))
-            {
-                if (!HasBeenMatched(pattern.positions))
-                {
-                    if (bestMatch == null || pattern.value > bestMatch.value)
-                    {
-                        bestMatch = pattern;
-                    }
-                }
-                haspattern = true;
-            }
-        }
-
-        if (bestMatch != null)
-        {
-            matchedPatterns.Add(bestMatch.positions);
-            if (score < bestMatch.value)
-            {
-                score = bestMatch.value;
-            }
-            Debug.Log($"Nouveau pattern trouvé, +{bestMatch.value} points !");
-            UpdateScoreUI();
-        }
-
-        if (!haspattern)
-        {
-            float secondchancescore = CombinationLib.SecondChancePattern();
-            if (score < secondchancescore)
-            {
-                score = secondchancescore;
-                Debug.Log($"Chance ! +{secondchancescore} points !");
-                UpdateScoreUI();
+                planetMap[pos] = p;
             }
         }
     }
+
+    CombinationLib.PatternCombination bestMatch = null;
+
+    // Choisir la bonne liste de patterns selon la phase
+    List<CombinationLib.PatternCombination> patternList = currentPhase == Phase.Normal
+        ? CombinationLib.combinations
+        : CombinationLib.bonuscombinations;
+
+    // Recherche du meilleur pattern correspondant
+    foreach (CombinationLib.PatternCombination pattern in patternList)
+    {
+        if (IsMatch(pattern.positions, planetMap))
+        {
+            if (!HasBeenMatched(pattern.positions))
+            {
+                if (bestMatch == null || pattern.value > bestMatch.value)
+                {
+                    bestMatch = pattern;
+                }
+            }
+            hasPattern = true;
+        }
+    }
+
+    // Appliquer le meilleur score s’il y a match
+    if (bestMatch != null)
+    {
+        matchedPatterns.Add(bestMatch.positions);
+
+        if (ScoreManager.Instance.GetScore() < bestMatch.value)
+        {
+            ScoreManager.Instance.SetScore(bestMatch.value);
+            Debug.Log($"Nouveau pattern trouvé, +{bestMatch.value} points !");
+            UpdateScoreUI(bestMatch.value);
+        }
+    }
+
+    // Sinon, chance secondaire
+    if (!hasPattern)
+    {
+        float secondChanceScore = CombinationLib.SecondChancePattern();
+        if (ScoreManager.Instance.GetScore() < secondChanceScore)
+        {
+            ScoreManager.Instance.SetScore(secondChanceScore);
+            Debug.Log($"Chance ! +{secondChanceScore} points !");
+            UpdateScoreUI(secondChanceScore);
+        }
+    }
+}
 
     private bool IsMatch(Vector2[] pattern, Dictionary<Vector2, Planet> map)
     {
@@ -117,7 +137,7 @@ public class Scoring : MonoBehaviour
         return new Vector2(Mathf.Round(position.x * 100f) / 100f, Mathf.Round(position.y * 100f) / 100f);
     }
 
-    private void UpdateScoreUI()
+    private void UpdateScoreUI(float score)
     {
         if (scoreValue != null)
         {
@@ -126,12 +146,26 @@ public class Scoring : MonoBehaviour
     }
 
     public void RegisterDestroyedAsteroid()
+{
+    DestroyedAsteroid++;
+    if (DestroyedAsteroid >= totalAsteroid)
     {
-        DestroyedAsteroid++;
-        if (DestroyedAsteroid >= totalAsteroid)
+        Debug.Log("Fin de phase détectée");
+        checkPatterns();
+
+        if (currentPhase == Phase.Normal)
         {
-            Debug.Log("Fin du jeu");
-            checkPatterns();
+            // Lancer la phase bonus
+            currentPhase = Phase.Bonus;
+            Debug.Log("Chargement de la scène Bonus");
+            SceneManagement.LoadBonusScene(); // ou SceneManager.LoadScene("BonusScene")
+        }
+        else
+        {
+            Debug.Log("Fin du Bonus : retour au menu ou fin de jeu");
+            SceneManagement.LoadGameOver(); // À adapter selon ce que tu veux après la phase bonus
         }
     }
+}
+
 }

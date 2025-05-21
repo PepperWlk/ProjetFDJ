@@ -8,7 +8,6 @@ public class Asteroid : MonoBehaviour
     public void setLinkedPlanet (GameObject planete)
     {
         linkedPlanet = planete;
-        Debug.Log("Planete liée");
     }
 
     private void OnTriggerEnter2D(Collider2D other)

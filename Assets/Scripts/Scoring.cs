@@ -9,7 +9,7 @@ public class Scoring : MonoBehaviour
         Normal,
         Bonus,
     }
-    public Phase currentPhase = Phase.Normal;
+    public Phase currentPhase;
     public List<GameObject> Allplanets;
     public TMP_Text scoreValue;
     private List<Vector2[]> matchedPatterns = new List<Vector2[]>();
@@ -19,85 +19,72 @@ public class Scoring : MonoBehaviour
 
     private void Start()
     {
+        currentPhase = Phase.Normal;
         UpdateScoreUI(ScoreManager.Instance.GetScore());
     }
 
     public void checkPatterns()
-{
-    bool hasPattern = false;
-    Dictionary<Vector2, Planet> planetMap = new Dictionary<Vector2, Planet>();
-
-    // Construction du planetMap
-    foreach (GameObject planetObj in Allplanets)
     {
-        if (planetObj.activeInHierarchy)
+        Dictionary<Vector2, Planet> planetMap = new Dictionary<Vector2, Planet>();
+
+        // Construction du planetMap
+        foreach (GameObject planetObj in Allplanets)
         {
-            Vector2 pos = RoundPosition(planetObj.transform.position);
-            Planet p = planetObj.GetComponent<Planet>();
-            if (p != null && !planetMap.ContainsKey(pos))
+            if (planetObj.activeInHierarchy)
             {
-                planetMap[pos] = p;
-            }
-        }
-    }
-
-    CombinationLib.PatternCombination bestMatch = null;
-
-    // Choisir la bonne liste de patterns selon la phase
-    List<CombinationLib.PatternCombination> patternList = currentPhase == Phase.Normal
-        ? CombinationLib.combinations
-        : CombinationLib.bonuscombinations;
-
-    // Recherche du meilleur pattern correspondant
-    foreach (CombinationLib.PatternCombination pattern in patternList)
-    {
-        if (IsMatch(pattern.positions, planetMap))
-        {
-            if (!HasBeenMatched(pattern.positions))
-            {
-                if (bestMatch == null || pattern.value > bestMatch.value)
+                Vector2 pos = RoundPosition(planetObj.transform.position);
+                Planet p = planetObj.GetComponent<Planet>();
+                if (p != null && !planetMap.ContainsKey(pos))
                 {
-                    bestMatch = pattern;
+                    planetMap[pos] = p;
                 }
             }
-            hasPattern = true;
+        }
+
+        CombinationLib.PatternCombination bestMatch = null;
+
+        // Choisir la bonne liste de patterns selon la phase
+        List<CombinationLib.PatternCombination> patternList = currentPhase == Phase.Normal
+            ? CombinationLib.combinations
+            : CombinationLib.bonuscombinations;
+
+        // Recherche du meilleur pattern correspondant
+        foreach (CombinationLib.PatternCombination pattern in patternList)
+        {
+            if (IsMatch(pattern.positions, planetMap))
+            {
+                if (!HasBeenMatched(pattern.positions))
+                {
+                    if (bestMatch == null || pattern.value > bestMatch.value)
+                    {
+                        bestMatch = pattern;
+                    }
+                }
+            }
+        }
+
+        // Appliquer le meilleur score s’il y a match
+        if (bestMatch != null)
+        {
+            matchedPatterns.Add(bestMatch.positions);
+
+            float currentScore = ScoreManager.Instance.GetScore();
+            float newScore;
+
+            if (currentPhase == Phase.Normal)
+            {
+                newScore = Mathf.Max(currentScore, bestMatch.value); // garder le plus élevé
+            }
+            else // Phase.Bonus
+            {
+                newScore = currentScore + bestMatch.value; // additionner
+            }
+
+            ScoreManager.Instance.SetScore(newScore);
+            Debug.Log($"Pattern trouvé ({currentPhase}) : +{bestMatch.value} points !");
+            UpdateScoreUI(newScore);
         }
     }
-
-    // Appliquer le meilleur score s’il y a match
-    if (bestMatch != null)
-    {
-        matchedPatterns.Add(bestMatch.positions);
-
-        float currentScore = ScoreManager.Instance.GetScore();
-        float newScore;
-
-        if (currentPhase == Phase.Normal)
-        {
-            newScore = Mathf.Max(currentScore, bestMatch.value); // garder le plus élevé
-        }
-        else // Phase.Bonus
-        {
-            newScore = currentScore + bestMatch.value; // additionner
-        }
-
-        ScoreManager.Instance.SetScore(newScore);
-        Debug.Log($"Pattern trouvé ({currentPhase}) : +{bestMatch.value} points !");
-        UpdateScoreUI(newScore);
-    }
-
-    // Sinon, chance secondaire
-    if (!hasPattern)
-    {
-        float secondChanceScore = CombinationLib.SecondChancePattern();
-        if (ScoreManager.Instance.GetScore() < secondChanceScore)
-        {
-            ScoreManager.Instance.SetScore(secondChanceScore);
-            Debug.Log($"Chance ! +{secondChanceScore} points !");
-            UpdateScoreUI(secondChanceScore);
-        }
-    }
-}
 
     private bool IsMatch(Vector2[] pattern, Dictionary<Vector2, Planet> map)
     {
@@ -155,26 +142,37 @@ public class Scoring : MonoBehaviour
     }
 
     public void RegisterDestroyedAsteroid()
-{
-    DestroyedAsteroid++;
-    if (DestroyedAsteroid >= totalAsteroid)
     {
-        Debug.Log("Fin de phase détectée");
+        DestroyedAsteroid++;
+        Debug.Log("Astéroïde détruit : " + DestroyedAsteroid + "check si fin de phase");
+            if (DestroyedAsteroid >= totalAsteroid)
+            {
+                Debug.Log("Fin de phase détectée");
+                StartCoroutine(DelayedPhaseTransition());
+                Debug.Log("Vérification des patterns terminé");
+                Debug.Log("Changement de phase");
+            }
+    }
+    private System.Collections.IEnumerator DelayedPhaseTransition()
+    {
+        Debug.Log("⏳ Attente avant changement de phase...");
+        yield return new WaitForSeconds(0.25f);
+
+        Debug.Log("✅ Vérification des patterns");
         checkPatterns();
 
-        if (currentPhase == Phase.Normal)
+        if (PatternManager.Instance.CurrentPhase == Phase.Normal)
         {
-            // Lancer la phase bonus
-            currentPhase = Phase.Bonus;
-            Debug.Log("Chargement de la scène Bonus");
-            SceneManagement.LoadBonusScene(); // ou SceneManager.LoadScene("BonusScene")
+            PatternManager.Instance.CurrentPhase = Phase.Bonus;
+            Debug.Log("➡️ Chargement de la scène Bonus");
+            SceneManagement.LoadBonusScene();
         }
         else
         {
-            Debug.Log("Fin du Bonus : retour au menu ou fin de jeu");
-            SceneManagement.LoadGameOver(); // À adapter selon ce que tu veux après la phase bonus
+            Debug.Log("🏁 Fin du Bonus : retour au menu ou fin de jeu");
+            SceneManagement.LoadGameOver();
         }
     }
-}
+
 
 }

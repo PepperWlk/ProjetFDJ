@@ -17,7 +17,7 @@ public class PrizeManager : MonoBehaviour
     }
 
     // Croupier
-    public int DrawPrize()
+    public static int DrawPrize()
     {
         float roll = Random.Range(0, 9000000);
 

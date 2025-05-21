@@ -166,7 +166,7 @@ public static class CombinationLib
                 new Vector2(0 , -3),
                 new Vector2(-6, 1)
             },
-            1000,
+            10000,
             0.005f
         ),
     };
@@ -192,6 +192,7 @@ public static class CombinationLib
 
     public static PatternCombination ChooseBonusPattern()
     {
+        Debug.Log("ChoosePattern début");
         float totalChance = 0f;
         foreach (var comb in bonuscombinations)
             totalChance += comb.chance;
@@ -203,9 +204,10 @@ public static class CombinationLib
         {
             cumulative += comb.chance;
             if (rand < cumulative)
+                Debug.Log("ChoosePattern fin pattern");
                 return comb;
         }
-
+        Debug.Log("ChoosePattern fin rien");
         return null;
     }
 

@@ -1,51 +1,97 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
+using System.Linq;
 
-public class BonusManager : MonoBehaviour
+public class BonusGameManager : MonoBehaviour
 {
-    public GameObject[] bonusPlanets;
-    public GameObject[] bonusAsteroids;
+    public GameObject[] caillouPrefab;
+    public GameObject[] planetePrefab;
     public Scoring scoringScript;
-
     private Tuile[] toutesLesTuiles;
-    private List<GameObject> listPlanet = new List<GameObject>();
+    private List<GameObject> listPlanets = new List<GameObject>();
 
     private void Start()
     {
+        
+        Debug.Log("Phase actuelle (PatternManager) : " + PatternManager.Instance.CurrentPhase);
+
+        scoringScript.currentPhase = PatternManager.Instance.CurrentPhase;
+
+        Debug.Log("Phase actuelle (scoring) : " + scoringScript.currentPhase);
+        
+        PatternManager.Instance.CurrentPhase = Scoring.Phase.Bonus;
+
         toutesLesTuiles = FindObjectsByType<Tuile>(FindObjectsSortMode.None);
-        SpawnBonus();
+
+        CombinationLib.PatternCombination pattern = PatternManager.Instance.GetCurrentPattern();
+        if (pattern == null || pattern.positions == null)
+        {
+            Debug.LogWarning("❌ Pattern invalide (null) pour le bonus !");
+            return;
+        }
+
+
+        SpawnPlanetsAndAsteroids(pattern);
     }
 
-    private void SpawnBonus()
+    private void SpawnPlanetsAndAsteroids(CombinationLib.PatternCombination pattern)
     {
-        listPlanet.Clear();
+        listPlanets.Clear();
 
-        var pattern = CombinationLib.ChooseBonusPattern();
-        var patternPos = new HashSet<Vector2>();
-        int planetID = Random.Range(0, bonusPlanets.Length);
+        HashSet<Vector2> patternPositions = new HashSet<Vector2>(pattern.positions);
+        int patternPlanetID = Random.Range(0, planetePrefab.Length);
 
-        foreach (var pos in pattern.positions)
-            patternPos.Add(pos);
+        Debug.Log("Pattern bonus choisi : " + pattern.value);
 
         foreach (Tuile tuile in toutesLesTuiles)
         {
-            Vector2 pos = tuile.GetGridPosition();
-            int chosenID = patternPos.Contains(pos) ? planetID : Random.Range(0, bonusPlanets.Length);
+            Vector2 tilePos = tuile.transform.position;
+            int chosenPlanetID;
 
-            GameObject planet = Instantiate(bonusPlanets[chosenID], tuile.transform.position, Quaternion.identity);
+            if (PositionInPattern(tilePos, patternPositions))
+            {
+                chosenPlanetID = patternPlanetID;
+                Debug.Log("[Pattern Bonus] Planète spéciale sur cette tuile");
+            }
+            else
+            {
+                do
+                {
+                    chosenPlanetID = Random.Range(0, planetePrefab.Length);
+                } while (chosenPlanetID == patternPlanetID);
+            }
+
+            // Planète
+            GameObject planet = Instantiate(planetePrefab[chosenPlanetID], tuile.transform.position, Quaternion.identity);
             planet.SetActive(false);
             tuile.currentPlanet = planet;
-            listPlanet.Add(planet);
+            listPlanets.Add(planet);
 
-            GameObject asteroid = Instantiate(bonusAsteroids[Random.Range(0, bonusAsteroids.Length)], tuile.transform.position, Quaternion.identity);
-            asteroid.GetComponent<Asteroid>().setLinkedPlanet(planet);
-            asteroid.GetComponent<Asteroid>().scoreScript = scoringScript;
+            // Astéroïde
+            GameObject asteroidPrefab = caillouPrefab[Random.Range(0, caillouPrefab.Length)];
+            GameObject asteroid = Instantiate(asteroidPrefab, tuile.transform.position, Quaternion.identity);
+
+            Asteroid asteroidScript = asteroid.GetComponent<Asteroid>();
+            if (asteroidScript != null)
+            {
+                asteroidScript.setLinkedPlanet(planet);
+                asteroidScript.scoreScript = scoringScript;
+            }
         }
 
         if (scoringScript != null)
         {
-            scoringScript.Allplanets = listPlanet;
-            scoringScript.currentPhase = Scoring.Phase.Bonus;
+            scoringScript.Allplanets = listPlanets;
         }
+    }
+
+    private bool PositionInPattern(Vector2 tilePos, HashSet<Vector2> patternPositions, float tolerance = 0.5f)
+    {
+        foreach (Vector2 patternPos in patternPositions)
+        {
+            if (Vector2.Distance(tilePos, patternPos) < tolerance)
+                return true;
+        }
+        return false;
     }
 }

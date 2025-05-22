@@ -4,20 +4,10 @@ public class Asteroid : MonoBehaviour
 {   
     private GameObject linkedPlanet;
     public Scoring scoreScript;
-    private void Start()
-    {
-
-    }
-
-    private void Update()
-    {
-        
-    }
 
     public void setLinkedPlanet (GameObject planete)
     {
         linkedPlanet = planete;
-        Debug.Log("Planete liée");
     }
 
     private void OnTriggerEnter2D(Collider2D other)

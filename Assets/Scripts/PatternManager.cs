@@ -55,7 +55,7 @@ public class PatternManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("PrizeManager instance not found!");
+            Debug.LogError("Either PrizeManager is null or targetValue is not valid.");
         }
 
         var basePatterns = CombinationLib.combinations;

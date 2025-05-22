@@ -44,7 +44,7 @@ public class Scoring : MonoBehaviour
         CombinationLib.PatternCombination bestMatch = null;
 
         // Choisir la bonne liste de patterns selon la phase
-        List<CombinationLib.PatternCombination> patternList = currentPhase == Phase.Normal
+        List<CombinationLib.PatternCombination> patternList = PatternManager.Instance.CurrentPhase == Phase.Normal
             ? CombinationLib.combinations
             : CombinationLib.bonuscombinations;
 
@@ -71,7 +71,7 @@ public class Scoring : MonoBehaviour
             float currentScore = ScoreManager.Instance.GetScore();
             float newScore;
 
-            if (currentPhase == Phase.Normal)
+            if (currentPhase == PatternManager.Instance.CurrentPhase)
             {
                 newScore = Mathf.Max(currentScore, bestMatch.value); // garder le plus élevé
             }

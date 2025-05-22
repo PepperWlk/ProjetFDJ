@@ -12,14 +12,16 @@ public class BonusGameManager : MonoBehaviour
 
     private void Start()
     {
-        
         Debug.Log("Phase actuelle (PatternManager) : " + PatternManager.Instance.CurrentPhase);
 
         scoringScript.currentPhase = PatternManager.Instance.CurrentPhase;
 
         Debug.Log("Phase actuelle (scoring) : " + scoringScript.currentPhase);
-        
-        PatternManager.Instance.CurrentPhase = Scoring.Phase.Bonus;
+
+        // Appel de SelectPatterns ici avec le score récupéré
+        PatternManager.Instance.SelectPatterns(PatternManager.Instance.TargetValue);
+        Debug.Log("Valeur cible : " + PatternManager.Instance.TargetValue);
+        Debug.Log("✅ SelectPatterns appelé dans BonusGameManager");
 
         toutesLesTuiles = FindObjectsByType<Tuile>(FindObjectsSortMode.None);
 
@@ -30,9 +32,9 @@ public class BonusGameManager : MonoBehaviour
             return;
         }
 
-
         SpawnPlanetsAndAsteroids(pattern);
     }
+
 
     private void SpawnPlanetsAndAsteroids(CombinationLib.PatternCombination pattern)
     {

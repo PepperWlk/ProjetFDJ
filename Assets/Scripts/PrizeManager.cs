@@ -31,4 +31,62 @@ public class PrizeManager : MonoBehaviour
         if (roll < 2 + 5 + 16950 + 100000 + 250000 + 500000 + 1000000 + 6000000) { return 1; } // Probabilité de 6 000 000 / 9 000 000 ≈ 66.67%
         return 0;
     }
+
+    public int DrawTicket(float ticketValue)
+    {
+        if (ticketValue == 2)
+        {
+            int roll = Random.Range(0, 1000000);
+            if (roll < 250000)
+            {
+                return 1;
+            }
+            else if (roll < 500000)
+            {
+                return 2;
+            }
+            else
+            {
+                return 3;
+            }
+        }
+        if (ticketValue == 1)
+        {
+            int roll = Random.Range(0, 6000000);
+            if (roll < 3000000)
+            {
+                return 1;
+            }
+            else
+            {
+                return 2;
+            }
+        }
+        if (ticketValue == 10)
+        {
+            int roll = Random.Range(0, 250000);
+            if (roll < 125000)
+            {
+                return 1;
+            }
+            else
+            {
+                return 2;
+            }
+        }
+        if (ticketValue == 10000)
+        {
+            int roll = Random.Range(0, 2);
+            if (roll == 0)
+            {
+                return 1;
+            }
+            else
+            {
+                return 2;
+            }
+        }
+        return 0;
+    }
+    
 }

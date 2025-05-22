@@ -7,8 +7,12 @@ public class PatternManager : MonoBehaviour
     public static PatternManager Instance;
 
     public float TargetValue { get; private set; } = 0f;
+    public int? ticketValue { get; private set; } = null;
+
     public CombinationLib.PatternCombination SelectedBasePattern { get; private set; }
     public CombinationLib.PatternCombination SelectedBonusPattern { get; private set; }
+
+    public PrizeManager prizeManager;
 
     public Scoring.Phase CurrentPhase { get; set; } = Scoring.Phase.Normal; // Utilise l’enum de Scoring
 
@@ -24,6 +28,16 @@ public class PatternManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    void Start()
+    {
+        if (prizeManager == null)
+        {
+            prizeManager = FindFirstObjectByType<PrizeManager>();
+            if (prizeManager == null)
+                Debug.LogError("PrizeManager introuvable après chargement !");
+        }
+    }
+
     public CombinationLib.PatternCombination GetCurrentPattern()
     {
         return CurrentPhase == Scoring.Phase.Normal ? SelectedBasePattern : SelectedBonusPattern;
@@ -35,70 +49,105 @@ public class PatternManager : MonoBehaviour
 
         TargetValue = targetValue;
 
+        if (prizeManager != null && (targetValue == 1 || targetValue == 2 || targetValue == 10 || targetValue == 10000) && PatternManager.Instance.CurrentPhase == Scoring.Phase.Normal)
+        {
+            ticketValue = prizeManager.DrawTicket(targetValue);
+        }
+        else
+        {
+            Debug.LogError("PrizeManager instance not found!");
+        }
+
         var basePatterns = CombinationLib.combinations;
         var bonusPatterns = CombinationLib.bonuscombinations;
 
         SelectedBasePattern = null;
         SelectedBonusPattern = null;
 
-        // Cas 1 : Base = Target
-        foreach (var basePattern in basePatterns)
+        if (ticketValue == 0)
         {
-            if (Mathf.Approximately(basePattern.value, targetValue))
+            // Cas 4 : Score = 0, on force des patterns qui ne matchent pas
+            if (Mathf.Approximately(targetValue, 0f))
             {
-                SelectedBasePattern = basePattern;
-                SelectedBonusPattern = new CombinationLib.PatternCombination(
-                GenerateNonMatchingPattern(9, bonusPatterns), -1, 0f);
+                var baseFake = GenerateNonMatchingPattern(9, basePatterns);
+                var bonusFake = GenerateNonMatchingPattern(9, bonusPatterns);
+
+                if (baseFake == null || bonusFake == null)
+                {
+                    Debug.LogError("❌ Impossible de générer des patterns non matchés !");
+                    return; // Ou gérer autrement, mais NE PAS continuer
+                }
+
+                SelectedBasePattern = new CombinationLib.PatternCombination(baseFake, -1, 0f);
+                SelectedBonusPattern = new CombinationLib.PatternCombination(bonusFake, -2, 0f);
+
+                Debug.Log("[PatternManager] Cas 4 (0) sélectionné");
                 return;
             }
-        }
-
-        // Cas 2 : Bonus = Target
-        foreach (var bonusPattern in bonusPatterns)
-        {
-            if (Mathf.Approximately(bonusPattern.value, targetValue))
+            else
             {
-                SelectedBonusPattern = bonusPattern;
+                Debug.Log("[PatternManager] Cas 4 (0) sélectionné");
                 SelectedBasePattern = new CombinationLib.PatternCombination(
-                GenerateNonMatchingPattern(9, basePatterns), -1, 0f);
+                    GenerateNonMatchingPattern(9, basePatterns), -1, 0f);
+                SelectedBonusPattern = new CombinationLib.PatternCombination(
+                    GenerateNonMatchingPattern(9, bonusPatterns), -2, 0f);
                 return;
             }
         }
 
-        // Cas 3 : Base + Bonus = Target
-        foreach (var basePattern in basePatterns)
+        if (ticketValue == 1 || ticketValue == null)
         {
-            foreach (var bonusPattern in bonusPatterns)
+            // Cas 1 : Base = Target
+            Debug.Log("Cas 1");
+            foreach (var basePattern in basePatterns)
             {
-                if (Mathf.Approximately(basePattern.value + bonusPattern.value, targetValue))
+                if (Mathf.Approximately(basePattern.value, targetValue))
                 {
                     SelectedBasePattern = basePattern;
-                    SelectedBonusPattern = bonusPattern;
+                    SelectedBonusPattern = new CombinationLib.PatternCombination(
+                    GenerateNonMatchingPattern(9, bonusPatterns), -1, 0f);
                     return;
                 }
             }
         }
 
-        // Cas 4 : Score = 0, on force des patterns qui ne matchent pas
-        if (Mathf.Approximately(targetValue, 0f))
+        if (ticketValue == 2)
         {
-            var baseFake = GenerateNonMatchingPattern(9, basePatterns);
-            var bonusFake = GenerateNonMatchingPattern(9, bonusPatterns);
-
-            if (baseFake == null || bonusFake == null)
+            // Cas 2 : Bonus = Target
+            Debug.Log("Cas 2");
+            foreach (var bonusPattern in bonusPatterns)
             {
-                Debug.LogError("❌ Impossible de générer des patterns non matchés !");
-                return; // Ou gérer autrement, mais NE PAS continuer
+                if (Mathf.Approximately(bonusPattern.value, targetValue))
+                {
+                    SelectedBonusPattern = bonusPattern;
+                    SelectedBasePattern = new CombinationLib.PatternCombination(
+                    GenerateNonMatchingPattern(9, basePatterns), -1, 0f);
+                    return;
+                }
             }
-
-            SelectedBasePattern = new CombinationLib.PatternCombination(baseFake, -1, 0f);
-            SelectedBonusPattern = new CombinationLib.PatternCombination(bonusFake, -2, 0f);
-
-            Debug.Log("[PatternManager] Cas 4 (0) sélectionné");
-            return;
         }
 
 
+        if (ticketValue == 3)
+        {
+            // Cas 3 : Base + Bonus = Target
+            Debug.Log("Cas 3");
+            foreach (var basePattern in basePatterns)
+            {
+                foreach (var bonusPattern in bonusPatterns)
+                {
+                    if (Mathf.Approximately(basePattern.value + bonusPattern.value, targetValue))
+                    {
+                        SelectedBasePattern = basePattern;
+                        SelectedBonusPattern = bonusPattern;
+                        return;
+                    }
+                }
+            }
+        }
+        Debug.LogWarning("⚠️ Aucun pattern trouvé avec la stratégie tirée — fallback vers 0€ patterns.");
+        SelectedBasePattern = new CombinationLib.PatternCombination(GenerateNonMatchingPattern(9, basePatterns), -1, 0f);
+        SelectedBonusPattern = new CombinationLib.PatternCombination(GenerateNonMatchingPattern(9, bonusPatterns), -2, 0f);
     }
 
     private CombinationLib.PatternCombination GetRandom(List<CombinationLib.PatternCombination> list)
@@ -153,5 +202,8 @@ public class PatternManager : MonoBehaviour
         }
         return true;
     }
+
+
+
 }
 

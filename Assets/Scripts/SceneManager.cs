@@ -53,12 +53,11 @@ public class SceneManagement : MonoBehaviour
         var score = ScoreManager.Instance.GetScore();
         Debug.Log($"[SceneManagement] Score actuel : {score}");
 
-        PatternManager.Instance.SelectPatterns(score);
-        Debug.Log("[SceneManagement] Patterns sélectionnés");
-
         PatternManager.Instance.CurrentPhase = Scoring.Phase.Bonus;
+
         LoadScene("BonusScene");
     }
+
 
 
 
@@ -66,7 +65,7 @@ public class SceneManagement : MonoBehaviour
     {
         LoadScene("RuleScene");
     }
-
+    
     public static void LoadGameOver()
     {
         Debug.Log("[SceneManagement] Chargement de l'écran de fin de jeu");

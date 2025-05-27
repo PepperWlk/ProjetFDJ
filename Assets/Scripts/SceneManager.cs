@@ -44,6 +44,7 @@ public class SceneManagement : MonoBehaviour
     public static void LoadMainMenu()
     {
         LoadScene("MainMenu");
+        ScoreManager.Instance.SetScore(0);
     }
 
     public static void LoadBonusScene()

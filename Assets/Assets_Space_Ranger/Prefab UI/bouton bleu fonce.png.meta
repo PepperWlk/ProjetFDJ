@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      bouton bleu fonce_0: 5515845454033191708
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

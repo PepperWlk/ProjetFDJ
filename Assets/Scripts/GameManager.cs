@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
 
     private Tuile[] toutesLesTuiles;
     private List<GameObject> listPlanet = new List<GameObject>();
+    public static int chosenPlanetID;
 
     private void Start()
     {
@@ -42,7 +43,7 @@ public class GameManager : MonoBehaviour
             phase == Scoring.Phase.Normal ? PatternManager.Instance.SelectedBasePattern
                                         : PatternManager.Instance.SelectedBonusPattern
                                         );
-                                        Debug.Log("Planètes et astéroïdes générés");
+        Debug.Log("Planètes et astéroïdes générés");
     }
 
     private void SpawnPlanetsAndAsteroids(CombinationLib.PatternCombination pattern)
@@ -67,7 +68,6 @@ public class GameManager : MonoBehaviour
         foreach (Tuile tuile in toutesLesTuiles)
         {
             Vector2 tilePos = tuile.transform.position;
-            int chosenPlanetID;
 
             if (pattern != null && PositionInPattern(tilePos, patternPositions))
             {

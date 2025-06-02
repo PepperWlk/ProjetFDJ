@@ -64,9 +64,29 @@ public class Scoring : MonoBehaviour
         }
 
         // Appliquer le meilleur score s’il y a match
+        Debug.Log("=== Contenu de planetMap ===");
+        foreach (var kv in planetMap)
+        Debug.Log($" key={kv.Key}  → planetID={kv.Value.id}");
+
         if (bestMatch != null)
         {
-            matchedPatterns.Add(bestMatch.positions);
+            foreach (Vector2 pos in bestMatch.positions)
+            {
+                Vector2 roundedPos = RoundPosition(pos);
+                Debug.Log($"Recherche de roundedPos={roundedPos} dans planetMap");
+
+                if (planetMap.TryGetValue(roundedPos, out Planet planet))
+                {
+                    Debug.Log($"→ Clé trouvée, planète ID={planet.id} va clignoter");
+                    planet.ShinePattern();
+                    WaitTime(5000); // Attendre 5 seconde pour laisser l'animation se jouer
+                }
+                else
+                {
+                    Debug.LogWarning($"⛔ Aucun élément pour {roundedPos} dans planetMap");
+                }
+            }
+
 
             float currentScore = ScoreManager.Instance.GetScore();
             float newScore;
@@ -137,7 +157,7 @@ public class Scoring : MonoBehaviour
     {
         if (scoreValue != null)
         {
-            scoreValue.text = "Gain : " + score.ToString() +"€";
+            scoreValue.text = score.ToString() + "€";
         }
     }
 
@@ -145,13 +165,13 @@ public class Scoring : MonoBehaviour
     {
         DestroyedAsteroid++;
         Debug.Log("Astéroïde détruit : " + DestroyedAsteroid + "check si fin de phase");
-            if (DestroyedAsteroid >= totalAsteroid)
-            {
-                Debug.Log("Fin de phase détectée");
-                StartCoroutine(DelayedPhaseTransition());
-                Debug.Log("Vérification des patterns terminé");
-                Debug.Log("Changement de phase");
-            }
+        if (DestroyedAsteroid >= totalAsteroid)
+        {
+            Debug.Log("Fin de phase détectée");
+            StartCoroutine(DelayedPhaseTransition());
+            Debug.Log("Vérification des patterns terminé");
+            Debug.Log("Changement de phase");
+        }
     }
     private System.Collections.IEnumerator DelayedPhaseTransition()
     {
@@ -172,6 +192,12 @@ public class Scoring : MonoBehaviour
             Debug.Log("🏁 Fin du Bonus : retour au menu ou fin de jeu");
             SceneManagement.LoadGameOver();
         }
+    }
+    
+    private void WaitTime(int time)
+    {
+        // Attendre 0.5 seconde pour laisser l'animation se jouer
+        System.Threading.Thread.Sleep(time);
     }
 
 

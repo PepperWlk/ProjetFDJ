@@ -4,6 +4,7 @@ using DG.Tweening;
 public class Asteroid : MonoBehaviour
 {
     private GameObject linkedPlanet;
+    public GameObject explosionPrefab;
     public Scoring scoreScript;
     [SerializeField] private float floatAmount;
     [SerializeField] private float floatDuration = 5f;
@@ -11,6 +12,17 @@ public class Asteroid : MonoBehaviour
     public void setLinkedPlanet(GameObject planete)
     {
         linkedPlanet = planete;
+    }
+
+    private void Explode()
+    {
+        if (explosionPrefab != null)
+        {
+            Vector3 explosionPosition = transform.position;
+            explosionPosition.z = 100;
+            GameObject explosion = Instantiate(explosionPrefab, explosionPosition, Quaternion.identity);
+            Destroy(explosion, 2f); // Destroy the explosion after 2 seconds
+        }
     }
 
     private void Start()
@@ -43,16 +55,12 @@ public class Asteroid : MonoBehaviour
     {
         // détruire l’astéroïde
         Destroy(gameObject);
+        Explode();
 
         // révéler la planète liée
         if (linkedPlanet != null)
         {
             linkedPlanet.SetActive(true);
-            Planet p = linkedPlanet.GetComponent<Planet>();
-            if (p != null)
-            {
-                p.ShinePattern();
-            }
         }
         // informer le scoring
         if (scoreScript != null)

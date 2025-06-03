@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -12,6 +13,8 @@ public class Scoring : MonoBehaviour
     public Phase currentPhase;
     public List<GameObject> Allplanets;
     public TMP_Text scoreValue;
+    [SerializeField] private RollingScore rollingScore;
+
     private List<Vector2[]> matchedPatterns = new List<Vector2[]>();
 
     public int totalAsteroid = 9;
@@ -70,26 +73,9 @@ public class Scoring : MonoBehaviour
 
         if (bestMatch != null)
         {
-            foreach (Vector2 pos in bestMatch.positions)
-            {
-                Vector2 roundedPos = RoundPosition(pos);
-                Debug.Log($"Recherche de roundedPos={roundedPos} dans planetMap");
-
-                if (planetMap.TryGetValue(roundedPos, out Planet planet))
-                {
-                    Debug.Log($"→ Clé trouvée, planète ID={planet.id} va clignoter");
-                    planet.ShinePattern();
-                    WaitTime(5000); // Attendre 5 seconde pour laisser l'animation se jouer
-                }
-                else
-                {
-                    Debug.LogWarning($"⛔ Aucun élément pour {roundedPos} dans planetMap");
-                }
-            }
-
-
-            float currentScore = ScoreManager.Instance.GetScore();
-            float newScore;
+        
+            int currentScore = ScoreManager.Instance.GetScore();
+            int newScore;
 
             if (currentPhase == PatternManager.Instance.CurrentPhase)
             {
@@ -153,12 +139,20 @@ public class Scoring : MonoBehaviour
         return new Vector2(Mathf.Round(position.x * 100f) / 100f, Mathf.Round(position.y * 100f) / 100f);
     }
 
-    private void UpdateScoreUI(float score)
+    private void UpdateScoreUI(int score)
     {
-        if (scoreValue != null)
-        {
-            scoreValue.text = score.ToString() + "€";
-        }
+            if (scoreValue != null && rollingScore != null)
+            {
+                StartCoroutine(rollingScore.RollScoreRoutine(score));
+            }
+            if (scoreValue != null)
+            {
+                scoreValue.text = score.ToString("D5"); // Afficher le score avec 5 chiffres
+            }
+            else
+            {
+                Debug.LogWarning("scoreValue est null, impossible de mettre à jour l'UI du score.");   
+            }
     }
 
     public void RegisterDestroyedAsteroid()
@@ -173,7 +167,8 @@ public class Scoring : MonoBehaviour
             Debug.Log("Changement de phase");
         }
     }
-    private System.Collections.IEnumerator DelayedPhaseTransition()
+
+    private IEnumerator DelayedPhaseTransition()
     {
         Debug.Log("⏳ Attente avant changement de phase...");
         yield return new WaitForSeconds(0.25f);
@@ -181,23 +176,26 @@ public class Scoring : MonoBehaviour
         Debug.Log("✅ Vérification des patterns");
         checkPatterns();
 
+        if (rollingScore != null)
+        {
+            int score = (int)ScoreManager.Instance.GetScore();
+            yield return StartCoroutine(rollingScore.RollScoreRoutine(score));  // ✅ attendre correctement
+        }
+        else
+        {
+            yield return new WaitForSeconds(2f);  // fallback si le script est manquant
+        }
+
+        // ✅ Changement de scène après animation terminée
         if (PatternManager.Instance.CurrentPhase == Phase.Normal)
         {
             PatternManager.Instance.CurrentPhase = Phase.Bonus;
-            Debug.Log("➡️ Chargement de la scène Bonus");
             SceneManagement.LoadBonusScene();
         }
         else
         {
-            Debug.Log("🏁 Fin du Bonus : retour au menu ou fin de jeu");
             SceneManagement.LoadGameOver();
         }
-    }
-    
-    private void WaitTime(int time)
-    {
-        // Attendre 0.5 seconde pour laisser l'animation se jouer
-        System.Threading.Thread.Sleep(time);
     }
 
 

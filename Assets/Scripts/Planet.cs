@@ -7,10 +7,14 @@ public class Planet : MonoBehaviour
     public float blinkDuration = 0.5f;
     SpriteRenderer sr;
 
+    [SerializeField] private float floatAmount; // Amount to float up and down
+    [SerializeField] private float floatDuration = 5f; // Duration of the floating animation
+
     public void Start()
     {
         sr = GetComponent<SpriteRenderer>();
         Debug.Log("Planet ID: " + id);
+        floatAmount = Random.Range(0.5f, 1f);
         if (sr == null)
         {
             Debug.LogWarning("SpriteRenderer not found on Planet object.");
@@ -18,57 +22,24 @@ public class Planet : MonoBehaviour
         }
     }
 
-    public void CheckPlanet()
+    public void Update()
     {
-        if (sr != null && checkID() == true)
-        {
-            ShinePattern();
-        }
-        else
-        {
-            Debug.LogError("Planet ID does not match or SpriteRenderer is missing.");
-        }
-    }
-    public void ShinePattern()
-    {
-        Debug.Log($"[Planet] ShinePattern appelé pour la planète ID={id}, SpriteRenderer existe={sr != null}");
-
-        if (sr == null)
-        {
-            Debug.LogWarning($"[Planet] sr est null sur {name} (ID={id}).");
-            return;
-        }
-
-        // On arrête les tweens précédents
-        sr.DOKill();
-
-        // Remet l'alpha à 1 pour repartir d’un état opaque
-        sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, 1f);
-
-        // Test rapide : un seul fade pour diagnostiquer
-        float testDuration = 0.5f;
-        sr.DOFade(0.2f, testDuration).OnComplete(() =>
-        {
-            sr.DOFade(1f, testDuration);
-        });
-
-        // Version “clignotement continu” (décommenter après avoir confirmé que le test marche)
-        /*
-        float fastBlinkDuration = blinkDuration * 0.3f;
-        sr.DOFade(0.5f, fastBlinkDuration)
-        .SetLoops(-1, LoopType.Yoyo)
-        .SetEase(Ease.Linear);
-        */
+        // if (isActiveAndEnabled)
+        // {
+        //     Floating();
+        // }
     }
 
-
-    public bool checkID()
+    private void Floating()
     {
-        if (id == GameManager.chosenPlanetID)
+        // Only apply floating if not already tweening
+        if (!DOTween.IsTweening(transform))
         {
-            return true;
+            Vector3 targetPosition = transform.localPosition + new Vector3(0, floatAmount, 0);
+            transform.DOLocalMoveY(targetPosition.y, floatDuration)
+                .SetEase(Ease.Linear)
+                .SetLoops(-1, LoopType.Yoyo);
         }
-        Debug.Log("Planet ID does not match the chosen ID.");
-        return false;
     }
+
 }

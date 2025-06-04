@@ -175,7 +175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74181a782c98b424ca8064048a6262eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionPrefab: {fileID: 5246590903132409602, guid: 1a2cd9c977c8fb840b91f5fbed060c5c, type: 3}
+  explosionPrefab: {fileID: 5264220727427329394, guid: a99fc79e1b8033f44a2f10282bdbfb49, type: 3}
   scoreScript: {fileID: 0}
   floatAmount: 0
   floatDuration: 5

@@ -7,7 +7,7 @@ public class Asteroid : MonoBehaviour
     public GameObject explosionPrefab;
     public Scoring scoreScript;
     [SerializeField] private float floatAmount;
-    [SerializeField] private float floatDuration = 5f;
+    [SerializeField] private float floatDuration;
 
     public void setLinkedPlanet(GameObject planete)
     {
@@ -19,15 +19,19 @@ public class Asteroid : MonoBehaviour
         if (explosionPrefab != null)
         {
             Vector3 explosionPosition = transform.position;
-            explosionPosition.z = 100;
+            explosionPosition.z = -1;
             GameObject explosion = Instantiate(explosionPrefab, explosionPosition, Quaternion.identity);
-            Destroy(explosion, 2f); // Destroy the explosion after 2 seconds
+            explosion.GetComponent<SpriteRenderer>().sortingOrder = 100; // Set the explosion to be above the asteroid
+            new WaitForSeconds(0.5f);
+            Destroy(explosion, 0.5f); // Destroy the explosion after 2 seconds
+           
         }
     }
 
     private void Start()
     {
         floatAmount = Random.Range(0.5f, 1f); // Randomize the floating amount
+        floatDuration = Random.Range(3f, 6f); // Randomize the floating duration
     }
     private void Update()
     {

@@ -244,7 +244,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.41630584, g: 0.2966803, b: 0.5566038, a: 0.27058825}
+  m_Color: {r: 0.14818442, g: 0.2830189, b: 0.15120743, a: 0.27058825}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -445,7 +445,6 @@ MonoBehaviour:
   - {fileID: 44329593054580186, guid: c7be9c7b483021843b5abb6891d12116, type: 3}
   - {fileID: 3645614506534490654, guid: 63c4494d7696d6d438f6b770c150c4cb, type: 3}
   - {fileID: 8170099294668214099, guid: 8f866d6a0d58aa84499b95a8ecec06c7, type: 3}
-  - {fileID: 955300503067232879, guid: 5b8d3094de030d1499f40914bcc7bf19, type: 3}
   planetePrefab:
   - {fileID: 8371328623135771920, guid: b66516489daca954ca189f3276515578, type: 3}
   - {fileID: 7114427953263354430, guid: b649614cc5fe6494496b1e9cb6dd6c0f, type: 3}
@@ -2377,7 +2376,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 377, y: 197}
+  m_AnchoredPosition: {x: 380, y: 194}
   m_SizeDelta: {x: 1959, y: 408}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1310445472
@@ -2576,7 +2575,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -397.49997, y: 53.100006}
+  m_AnchoredPosition: {x: -452.99997, y: 25}
   m_SizeDelta: {x: -806, y: -472}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1428223491
@@ -3392,6 +3391,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentPhase: 0
+  linePrefab: {fileID: 3095789356873070481, guid: b820bfe48063c034b84287de80697cad, type: 3}
   Allplanets: []
   scoreValue: {fileID: 493959352}
   rollingScore: {fileID: 1292795665}

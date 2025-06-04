@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
@@ -82,9 +83,9 @@ public class GameManager : MonoBehaviour
                     chosenPlanetID = Random.Range(0, planetePrefab.Length);
                 } while (pattern != null && chosenPlanetID == patternPlanetID);
             }
-
+            
             // Instanciation planète
-            GameObject planet = Instantiate(planetePrefab[chosenPlanetID], tuile.transform.position, Quaternion.identity);
+            GameObject planet = Instantiate(planetePrefab[chosenPlanetID], tuile.transform.position + new Vector3(0, 0, 1), Quaternion.identity);
             planet.SetActive(false);
             tuile.currentPlanet = planet;
             listPlanet.Add(planet);

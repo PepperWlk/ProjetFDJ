@@ -11,6 +11,7 @@ public class Scoring : MonoBehaviour
         Bonus,
     }
     public Phase currentPhase;
+    public GameObject linePrefab;
     public List<GameObject> Allplanets;
     public TMP_Text scoreValue;
     [SerializeField] private RollingScore rollingScore;
@@ -69,11 +70,12 @@ public class Scoring : MonoBehaviour
         // Appliquer le meilleur score s’il y a match
         Debug.Log("=== Contenu de planetMap ===");
         foreach (var kv in planetMap)
-        Debug.Log($" key={kv.Key}  → planetID={kv.Value.id}");
+            Debug.Log($" key={kv.Key}  → planetID={kv.Value.id}");
 
         if (bestMatch != null)
         {
-        
+            DrawLineBetweenPattern(bestMatch.positions);
+
             int currentScore = ScoreManager.Instance.GetScore();
             int newScore;
 
@@ -141,18 +143,18 @@ public class Scoring : MonoBehaviour
 
     private void UpdateScoreUI(int score)
     {
-            if (scoreValue != null && rollingScore != null)
-            {
-                StartCoroutine(rollingScore.RollScoreRoutine(score));
-            }
-            if (scoreValue != null)
-            {
-                scoreValue.text = score.ToString("D5"); // Afficher le score avec 5 chiffres
-            }
-            else
-            {
-                Debug.LogWarning("scoreValue est null, impossible de mettre à jour l'UI du score.");   
-            }
+        if (scoreValue != null && rollingScore != null)
+        {
+            StartCoroutine(rollingScore.RollScoreRoutine(score));
+        }
+        if (scoreValue != null)
+        {
+            scoreValue.text = score.ToString("D5"); // Afficher le score avec 5 chiffres
+        }
+        else
+        {
+            Debug.LogWarning("scoreValue est null, impossible de mettre à jour l'UI du score.");
+        }
     }
 
     public void RegisterDestroyedAsteroid()
@@ -198,5 +200,26 @@ public class Scoring : MonoBehaviour
         }
     }
 
+    private void DrawLineBetweenPattern(Vector2[] positions)
+    {
+        GameObject lineObj = Instantiate(linePrefab);
+        lineObj.GetComponent<LineRenderer>().sortingOrder = 8;
+        LineRenderer lr = lineObj.GetComponent<LineRenderer>();
+        lr.positionCount = positions.Length;
+        for (int i = 0; i < positions.Length; i++)
+        {
+            Vector2 pos = RoundPosition(positions[i]);
+            GameObject planetGO = Allplanets.Find(p => RoundPosition(p.transform.position) == pos);
+
+            if (planetGO != null)
+            {
+                lr.SetPosition(i, planetGO.transform.position);
+            }
+            else
+            {
+                Debug.LogWarning($"Aucun GameObject trouvé pour la position {pos}. Assurez-vous que les planètes sont correctement positionnées.");
+            }
+        }
+    }
 
 }

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -10,8 +11,11 @@ public class Scoring : MonoBehaviour
         Bonus,
     }
     public Phase currentPhase;
+    public GameObject linePrefab;
     public List<GameObject> Allplanets;
     public TMP_Text scoreValue;
+    [SerializeField] private RollingScore rollingScore;
+
     private List<Vector2[]> matchedPatterns = new List<Vector2[]>();
 
     public int totalAsteroid = 9;
@@ -64,12 +68,16 @@ public class Scoring : MonoBehaviour
         }
 
         // Appliquer le meilleur score s’il y a match
+        Debug.Log("=== Contenu de planetMap ===");
+        foreach (var kv in planetMap)
+            Debug.Log($" key={kv.Key}  → planetID={kv.Value.id}");
+
         if (bestMatch != null)
         {
-            matchedPatterns.Add(bestMatch.positions);
+            DrawLineBetweenPattern(bestMatch.positions);
 
-            float currentScore = ScoreManager.Instance.GetScore();
-            float newScore;
+            int currentScore = ScoreManager.Instance.GetScore();
+            int newScore;
 
             if (currentPhase == PatternManager.Instance.CurrentPhase)
             {
@@ -133,11 +141,19 @@ public class Scoring : MonoBehaviour
         return new Vector2(Mathf.Round(position.x * 100f) / 100f, Mathf.Round(position.y * 100f) / 100f);
     }
 
-    private void UpdateScoreUI(float score)
+    private void UpdateScoreUI(int score)
     {
+        if (scoreValue != null && rollingScore != null)
+        {
+            StartCoroutine(rollingScore.RollScoreRoutine(score));
+        }
         if (scoreValue != null)
         {
-            scoreValue.text = "Gain : " + score.ToString() +"€";
+            scoreValue.text = score.ToString("D5"); // Afficher le score avec 5 chiffres
+        }
+        else
+        {
+            Debug.LogWarning("scoreValue est null, impossible de mettre à jour l'UI du score.");
         }
     }
 
@@ -145,15 +161,16 @@ public class Scoring : MonoBehaviour
     {
         DestroyedAsteroid++;
         Debug.Log("Astéroïde détruit : " + DestroyedAsteroid + "check si fin de phase");
-            if (DestroyedAsteroid >= totalAsteroid)
-            {
-                Debug.Log("Fin de phase détectée");
-                StartCoroutine(DelayedPhaseTransition());
-                Debug.Log("Vérification des patterns terminé");
-                Debug.Log("Changement de phase");
-            }
+        if (DestroyedAsteroid >= totalAsteroid)
+        {
+            Debug.Log("Fin de phase détectée");
+            StartCoroutine(DelayedPhaseTransition());
+            Debug.Log("Vérification des patterns terminé");
+            Debug.Log("Changement de phase");
+        }
     }
-    private System.Collections.IEnumerator DelayedPhaseTransition()
+
+    private IEnumerator DelayedPhaseTransition()
     {
         Debug.Log("⏳ Attente avant changement de phase...");
         yield return new WaitForSeconds(0.25f);
@@ -161,18 +178,48 @@ public class Scoring : MonoBehaviour
         Debug.Log("✅ Vérification des patterns");
         checkPatterns();
 
+        if (rollingScore != null)
+        {
+            int score = (int)ScoreManager.Instance.GetScore();
+            yield return StartCoroutine(rollingScore.RollScoreRoutine(score));  // ✅ attendre correctement
+        }
+        else
+        {
+            yield return new WaitForSeconds(2f);  // fallback si le script est manquant
+        }
+
+        // ✅ Changement de scène après animation terminée
         if (PatternManager.Instance.CurrentPhase == Phase.Normal)
         {
             PatternManager.Instance.CurrentPhase = Phase.Bonus;
-            Debug.Log("➡️ Chargement de la scène Bonus");
             SceneManagement.LoadBonusScene();
         }
         else
         {
-            Debug.Log("🏁 Fin du Bonus : retour au menu ou fin de jeu");
             SceneManagement.LoadGameOver();
         }
     }
 
+    private void DrawLineBetweenPattern(Vector2[] positions)
+    {
+        GameObject lineObj = Instantiate(linePrefab);
+        lineObj.GetComponent<LineRenderer>().sortingOrder = 8;
+        LineRenderer lr = lineObj.GetComponent<LineRenderer>();
+        lr.positionCount = positions.Length;
+        for (int i = 0; i < positions.Length; i++)
+        {
+            Vector2 pos = RoundPosition(positions[i]);
+            GameObject planetGO = Allplanets.Find(p => RoundPosition(p.transform.position) == pos);
+
+            if (planetGO != null)
+            {
+                lr.SetPosition(i, planetGO.transform.position);
+            }
+            else
+            {
+                Debug.LogWarning($"Aucun GameObject trouvé pour la position {pos}. Assurez-vous que les planètes sont correctement positionnées.");
+            }
+        }
+    }
 
 }

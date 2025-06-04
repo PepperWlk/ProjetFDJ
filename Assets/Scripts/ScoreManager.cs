@@ -4,7 +4,7 @@ public class ScoreManager : MonoBehaviour
 {
     public static ScoreManager Instance;
 
-    public float score = 0f;
+    public int score = 0;
 
     private void Awake()
     {
@@ -17,12 +17,12 @@ public class ScoreManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public void SetScore(float newScore)
+    public void SetScore(int newScore)
     {
         score = newScore;
     }
 
-    public float GetScore()
+    public int GetScore()
     {
         return score;
     }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class GameManager : MonoBehaviour
 
     private Tuile[] toutesLesTuiles;
     private List<GameObject> listPlanet = new List<GameObject>();
+    public static int chosenPlanetID;
 
     private void Start()
     {
@@ -42,7 +44,7 @@ public class GameManager : MonoBehaviour
             phase == Scoring.Phase.Normal ? PatternManager.Instance.SelectedBasePattern
                                         : PatternManager.Instance.SelectedBonusPattern
                                         );
-                                        Debug.Log("Planètes et astéroïdes générés");
+        Debug.Log("Planètes et astéroïdes générés");
     }
 
     private void SpawnPlanetsAndAsteroids(CombinationLib.PatternCombination pattern)
@@ -67,7 +69,6 @@ public class GameManager : MonoBehaviour
         foreach (Tuile tuile in toutesLesTuiles)
         {
             Vector2 tilePos = tuile.transform.position;
-            int chosenPlanetID;
 
             if (pattern != null && PositionInPattern(tilePos, patternPositions))
             {
@@ -82,9 +83,9 @@ public class GameManager : MonoBehaviour
                     chosenPlanetID = Random.Range(0, planetePrefab.Length);
                 } while (pattern != null && chosenPlanetID == patternPlanetID);
             }
-
+            
             // Instanciation planète
-            GameObject planet = Instantiate(planetePrefab[chosenPlanetID], tuile.transform.position, Quaternion.identity);
+            GameObject planet = Instantiate(planetePrefab[chosenPlanetID], tuile.transform.position + new Vector3(0, 0, 1), Quaternion.identity);
             planet.SetActive(false);
             tuile.currentPlanet = planet;
             listPlanet.Add(planet);

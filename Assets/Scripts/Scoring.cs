@@ -15,6 +15,7 @@ public class Scoring : MonoBehaviour
     public List<GameObject> Allplanets;
     public TMP_Text scoreValue;
     [SerializeField] private RollingScore rollingScore;
+    [SerializeField] private GroupColorChanger[] groupColorChanger;
 
     private List<Vector2[]> matchedPatterns = new List<Vector2[]>();
 
@@ -88,9 +89,57 @@ public class Scoring : MonoBehaviour
                 newScore = currentScore + bestMatch.value; // additionner
             }
 
+            foreach (GroupColorChanger group in groupColorChanger)
+            {
+                if (group.patternValue == bestMatch.value)
+                {
+                    group.ApplyWinningColor();
+                }
+                else
+                {
+                    group.ApplyLosingColor();
+                }
+            }
+            HashSet<Vector2> matchedPositions = new HashSet<Vector2>();
+            foreach (Vector2 pos in bestMatch.positions)
+            {
+                matchedPositions.Add(RoundPosition(pos));
+            }
+
+            foreach (Planet p in planetMap.Values)
+            {
+                Vector2 roundedPos = RoundPosition(p.transform.position);
+                if (matchedPositions.Contains(roundedPos))
+                {
+                    p.Scale();
+                }
+                else
+                {
+                    p.Blink();
+                }
+            }
+
+            
+
             ScoreManager.Instance.SetScore(newScore);
             Debug.Log($"Pattern trouvé ({currentPhase}) : +{bestMatch.value} points !");
             UpdateScoreUI(newScore);
+        }
+        else
+        {
+            Debug.Log("Aucun pattern trouvé.");
+            foreach (GroupColorChanger group in groupColorChanger)
+            {
+                group.ApplyColor(Color.grey, group.parent);
+            }
+            foreach (GameObject planetObj in Allplanets)
+            {
+                Planet p = planetObj.GetComponent<Planet>();
+                if (p != null)
+                {
+                    p.Blink(); // Faire clignoter les planètes
+                }
+            }
         }
     }
 
@@ -141,7 +190,7 @@ public class Scoring : MonoBehaviour
         return new Vector2(Mathf.Round(position.x * 100f) / 100f, Mathf.Round(position.y * 100f) / 100f);
     }
 
-    private void UpdateScoreUI(int score)
+    public void UpdateScoreUI(int score)
     {
         if (scoreValue != null && rollingScore != null)
         {
@@ -192,7 +241,7 @@ public class Scoring : MonoBehaviour
         if (PatternManager.Instance.CurrentPhase == Phase.Normal)
         {
             PatternManager.Instance.CurrentPhase = Phase.Bonus;
-            SceneManagement.LoadBonusScene();
+            FindFirstObjectByType<Transition>().StartAsteroidTransition();
         }
         else
         {

@@ -26,5 +26,4 @@ public class Tuile : MonoBehaviour
             sr.color = new Color32(255, 255, 255, 0); // Set the default color to white with 0 alpha
         }
     }
-
 }

@@ -85,8 +85,9 @@ public class GameManager : MonoBehaviour
             }
             
             // Instanciation planète
-            GameObject planet = Instantiate(planetePrefab[chosenPlanetID], tuile.transform.position + new Vector3(0, 0, 1), Quaternion.identity);
+            GameObject planet = Instantiate(planetePrefab[chosenPlanetID], tuile.transform.position, Quaternion.identity);
             planet.SetActive(false);
+            planet.GetComponent<SpriteRenderer>().sortingOrder = 0;
             tuile.currentPlanet = planet;
             listPlanet.Add(planet);
 

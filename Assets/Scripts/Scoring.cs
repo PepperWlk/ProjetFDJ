@@ -17,6 +17,8 @@ public class Scoring : MonoBehaviour
     [SerializeField] private RollingScore rollingScore;
     [SerializeField] private GroupColorChanger[] groupColorChanger;
 
+    public GameObject shipTransitionPrefab;
+
     private List<Vector2[]> matchedPatterns = new List<Vector2[]>();
 
     public int totalAsteroid = 9;
@@ -119,7 +121,7 @@ public class Scoring : MonoBehaviour
                 }
             }
 
-            
+
 
             ScoreManager.Instance.SetScore(newScore);
             Debug.Log($"Pattern trouvé ({currentPhase}) : +{bestMatch.value} points !");
@@ -241,7 +243,16 @@ public class Scoring : MonoBehaviour
         if (PatternManager.Instance.CurrentPhase == Phase.Normal)
         {
             PatternManager.Instance.CurrentPhase = Phase.Bonus;
-            FindFirstObjectByType<Transition>().StartAsteroidTransition();
+            // The rain asteroid transition that doesn't work is stil available there :
+            // StartCoroutine(FindFirstObjectByType<Transition>().SpawnAsteroidsRain());
+            GameObject ship = Instantiate(shipTransitionPrefab, new Vector3(-35f, -1, 0), Quaternion.Euler(0, 0, 10.785f));
+            ship.GetComponent<SpriteRenderer>().sortingOrder = 10000;
+            SpriteRenderer[] renderers = ship.GetComponentsInChildren<SpriteRenderer>(true); // true pour inclure les objets inactifs
+            foreach (var rend in renderers)
+            {
+                rend.sortingOrder = 10000;
+            }
+            ship.GetComponent<TransitionVaisseau>().nextSceneName = "BonusScene";
         }
         else
         {

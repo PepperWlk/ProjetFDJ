@@ -1984,7 +1984,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -0.0000019073, y: 127}
-  m_SizeDelta: {x: 470, y: 167}
+  m_SizeDelta: {x: 1080, y: 167}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &697617597
 MonoBehaviour:
@@ -2511,7 +2511,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0.000030518, y: 0}
-  m_SizeDelta: {x: 906, y: 542}
+  m_SizeDelta: {x: 1080, y: 542}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!328 &912307575
 VideoPlayer:
@@ -3469,9 +3469,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 329.9, y: -158.4}
+  m_AnchoredPosition: {x: 395.5, y: -143.5}
   m_SizeDelta: {x: 49.37, y: 36.79}
-  m_Pivot: {x: 0.5000001, y: 0.49999997}
+  m_Pivot: {x: 0.5000001, y: 0.49999982}
 --- !u!114 &1053710388
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5109,15 +5109,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2001095d2d8fe847ab5f95303184a93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fallAsteroidPrefab:
-  - {fileID: 1498357077496951446, guid: 50f6f208c00da044a9dc312c5bf10dcb, type: 3}
-  - {fileID: 2287070048046194040, guid: ce799605ab805f14ebba005568923c6a, type: 3}
-  - {fileID: 5238187954564533191, guid: 86ec8b0b938e64d4496ffd15a499966c, type: 3}
-  - {fileID: 6057500293595946722, guid: c076af74f1037e948b5371ce014d80bc, type: 3}
-  - {fileID: 8406530328701367480, guid: 2c084ccc2aac4e94181cff1b4fc10f30, type: 3}
-  fallAstroidCount: 50
-  transitionDuration: 2.5
-  nextSceneName: BonusScene
+  asteroidPrefab: {fileID: 955300503067232879, guid: be6c2536f7b605643be63762a6487421, type: 3}
+  spawnRate: 0.1
+  duration: 3
+  spawnAreaWidth: 20
 --- !u!4 &1399932282
 Transform:
   m_ObjectHideFlags: 0
@@ -5254,7 +5249,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -539.1, y: 122.100006}
+  m_AnchoredPosition: {x: -583, y: 107}
   m_SizeDelta: {x: -806, y: -472}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1428223491
@@ -7241,6 +7236,7 @@ MonoBehaviour:
   - {fileID: 945532956}
   - {fileID: 2125320377}
   - {fileID: 938214779}
+  shipTransitionPrefab: {fileID: 1778703281090453149, guid: 528473274fd853f40acdc9c67a256f61, type: 3}
   totalAsteroid: 9
   DestroyedAsteroid: 0
 --- !u!4 &1961081984
@@ -7710,8 +7706,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.0000019073, y: -316}
-  m_SizeDelta: {x: 470, y: 167}
+  m_AnchoredPosition: {x: 0.000059605, y: -316}
+  m_SizeDelta: {x: 576.67, y: 165.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2111383589
 MonoBehaviour:

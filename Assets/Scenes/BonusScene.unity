@@ -3857,59 +3857,6 @@ MonoBehaviour:
   winningColor: {r: 1, g: 1, b: 1, a: 1}
   parent: {fileID: 1388995826}
   patternValue: 10
---- !u!1 &1399932280
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1399932282}
-  - component: {fileID: 1399932281}
-  m_Layer: 0
-  m_Name: SceneTransitionManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1399932281
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1399932280}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2001095d2d8fe847ab5f95303184a93, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fallAsteroidPrefab:
-  - {fileID: 1498357077496951446, guid: 50f6f208c00da044a9dc312c5bf10dcb, type: 3}
-  - {fileID: 2287070048046194040, guid: ce799605ab805f14ebba005568923c6a, type: 3}
-  - {fileID: 5238187954564533191, guid: 86ec8b0b938e64d4496ffd15a499966c, type: 3}
-  - {fileID: 6057500293595946722, guid: c076af74f1037e948b5371ce014d80bc, type: 3}
-  - {fileID: 8406530328701367480, guid: 2c084ccc2aac4e94181cff1b4fc10f30, type: 3}
-  fallAstroidCount: 50
-  transitionDuration: 2.5
-  nextSceneName: BonusScene
---- !u!4 &1399932282
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1399932280}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.19261, y: -2.9744, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1410092218 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5301023405346524653, guid: 1ecfadc8b6a677f42809b6f2c72c9232, type: 3}
@@ -5266,6 +5213,8 @@ MonoBehaviour:
   - {fileID: 1187979940}
   - {fileID: 1650433834}
   - {fileID: 1388995828}
+  shipTransitionPrefab: {fileID: 0}
+  targetScene: BonusScene
   totalAsteroid: 9
   DestroyedAsteroid: 0
 --- !u!4 &1961081984
@@ -5836,5 +5785,4 @@ SceneRoots:
   - {fileID: 808700667}
   - {fileID: 1973555761}
   - {fileID: 1292795666}
-  - {fileID: 1399932282}
   - {fileID: 2038564386}

@@ -2133,6 +2133,7 @@ GameObject:
   - component: {fileID: 912307577}
   - component: {fileID: 912307576}
   - component: {fileID: 912307575}
+  - component: {fileID: 912307578}
   m_Layer: 5
   m_Name: VideoBG
   m_TagString: Untagged
@@ -2228,6 +2229,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 912307573}
   m_CullTransparentMesh: 1
+--- !u!114 &912307578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 912307573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9a27d815e8fcc948b0c888b2b56c632, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TransitionVideo: {fileID: 1771078138}
 --- !u!1001 &981649631
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3886,15 +3900,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2001095d2d8fe847ab5f95303184a93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fallAsteroidPrefab:
-  - {fileID: 1498357077496951446, guid: 50f6f208c00da044a9dc312c5bf10dcb, type: 3}
-  - {fileID: 2287070048046194040, guid: ce799605ab805f14ebba005568923c6a, type: 3}
-  - {fileID: 5238187954564533191, guid: 86ec8b0b938e64d4496ffd15a499966c, type: 3}
-  - {fileID: 6057500293595946722, guid: c076af74f1037e948b5371ce014d80bc, type: 3}
-  - {fileID: 8406530328701367480, guid: 2c084ccc2aac4e94181cff1b4fc10f30, type: 3}
-  fallAstroidCount: 50
-  transitionDuration: 2.5
-  nextSceneName: BonusScene
+  asteroidPrefab: {fileID: 0}
+  spawnRate: 0.1
+  duration: 3
+  spawnAreaWidth: 20
 --- !u!4 &1399932282
 Transform:
   m_ObjectHideFlags: 0
@@ -4743,6 +4752,113 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1165556805}
   m_SourcePrefab: {fileID: 100100000, guid: 1ecfadc8b6a677f42809b6f2c72c9232, type: 3}
+--- !u!1 &1771078137
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1771078141}
+  - component: {fileID: 1771078140}
+  - component: {fileID: 1771078139}
+  - component: {fileID: 1771078138}
+  m_Layer: 5
+  m_Name: TransitionVideo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!328 &1771078138
+VideoPlayer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1771078137}
+  m_Enabled: 1
+  m_VideoClip: {fileID: 32900000, guid: 0bd6592dc897b15478abaa861f887191, type: 3}
+  m_TargetCameraAlpha: 1
+  m_TargetCamera3DLayout: 0
+  m_TargetCamera: {fileID: 0}
+  m_TargetTexture: {fileID: 8400000, guid: 4b130a224b68d494c811510635c7373e, type: 2}
+  m_TimeReference: 0
+  m_TargetMaterialRenderer: {fileID: 0}
+  m_TargetMaterialProperty: <noninit>
+  m_RenderMode: 2
+  m_AspectRatio: 0
+  m_DataSource: 0
+  m_TimeUpdateMode: 2
+  m_PlaybackSpeed: 1
+  m_AudioOutputMode: 2
+  m_TargetAudioSources: []
+  m_DirectAudioVolumes: []
+  m_Url: 
+  m_EnabledAudioTracks: 
+  m_DirectAudioMutes: 
+  m_ControlledAudioTrackCount: 0
+  m_PlayOnAwake: 1
+  m_SkipOnDrop: 1
+  m_Looping: 1
+  m_WaitForFirstFrame: 1
+  m_FrameReadyEventEnabled: 0
+  m_VideoShaders: []
+--- !u!114 &1771078139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1771078137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 8400000, guid: 4b130a224b68d494c811510635c7373e, type: 2}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+--- !u!222 &1771078140
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1771078137}
+  m_CullTransparentMesh: 1
+--- !u!224 &1771078141
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1771078137}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 1852332969}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0.000030518, y: 0}
+  m_SizeDelta: {x: 906, y: 542}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1803133238 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5301023405346524653, guid: 1ecfadc8b6a677f42809b6f2c72c9232, type: 3}
@@ -4842,6 +4958,53 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1062733398}
   m_SourcePrefab: {fileID: 100100000, guid: 1ecfadc8b6a677f42809b6f2c72c9232, type: 3}
+--- !u!1 &1828036162
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1828036164}
+  - component: {fileID: 1828036163}
+  m_Layer: 0
+  m_Name: HyperExitEffect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1828036163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1828036162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d905e90133bdc9748987edbf02614e09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetSize: 5
+  zoomInDuration: 0.1
+  zoomOutDuration: 0.2
+--- !u!4 &1828036164
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1828036162}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -32.01715, y: 4.67749, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1852332965
 GameObject:
   m_ObjectHideFlags: 0
@@ -4939,6 +5102,7 @@ RectTransform:
   - {fileID: 645875958}
   - {fileID: 912307574}
   - {fileID: 21429451}
+  - {fileID: 1771078141}
   - {fileID: 240725996}
   - {fileID: 1310445471}
   - {fileID: 1428223490}
@@ -4946,6 +5110,7 @@ RectTransform:
   - {fileID: 697617596}
   - {fileID: 32420426}
   - {fileID: 1053710387}
+  - {fileID: 2038564386}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -5266,6 +5431,8 @@ MonoBehaviour:
   - {fileID: 1187979940}
   - {fileID: 1650433834}
   - {fileID: 1388995828}
+  videoTranstitionPrefab: {fileID: 912307573}
+  shipTransitionPrefab: {fileID: 1778703281090453149, guid: 528473274fd853f40acdc9c67a256f61, type: 3}
   totalAsteroid: 9
   DestroyedAsteroid: 0
 --- !u!4 &1961081984
@@ -5611,16 +5778,16 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2038564385}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -14.516, y: -2.6, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -245.36311, y: -56.375404, z: -1951.4563}
+  m_LocalScale: {x: 21.682848, y: 21.682848, z: 21.682848}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2060180223}
   - {fileID: 1187979939}
   - {fileID: 1650433833}
   - {fileID: 1388995827}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1852332969}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2060180222
 GameObject:
@@ -5837,4 +6004,4 @@ SceneRoots:
   - {fileID: 1973555761}
   - {fileID: 1292795666}
   - {fileID: 1399932282}
-  - {fileID: 2038564386}
+  - {fileID: 1828036164}

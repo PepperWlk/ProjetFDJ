@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Unity.VisualScripting;
 
 public class Scoring : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class Scoring : MonoBehaviour
     public TMP_Text scoreValue;
     [SerializeField] private RollingScore rollingScore;
     [SerializeField] private GroupColorChanger[] groupColorChanger;
-
+    public GameObject videoTranstitionPrefab;
     public GameObject shipTransitionPrefab;
 
     private List<Vector2[]> matchedPatterns = new List<Vector2[]>();
@@ -26,6 +27,7 @@ public class Scoring : MonoBehaviour
 
     private void Start()
     {
+
         currentPhase = Phase.Normal;
         UpdateScoreUI(ScoreManager.Instance.GetScore());
     }
@@ -233,6 +235,7 @@ public class Scoring : MonoBehaviour
         {
             int score = (int)ScoreManager.Instance.GetScore();
             yield return StartCoroutine(rollingScore.RollScoreRoutine(score));  // ✅ attendre correctement
+            Destroy(FindFirstObjectByType<LineRenderer>());
         }
         else
         {
@@ -245,12 +248,29 @@ public class Scoring : MonoBehaviour
             PatternManager.Instance.CurrentPhase = Phase.Bonus;
             // The rain asteroid transition that doesn't work is stil available there :
             // StartCoroutine(FindFirstObjectByType<Transition>().SpawnAsteroidsRain());
+
+            // Transition to BonusScene
+            BackgroundChanger videoChanger = videoTranstitionPrefab.GetComponent<BackgroundChanger>();
+            if (videoChanger != null)
+            {
+                videoChanger.ChangeActivity();
+                foreach (GameObject p in Allplanets)
+                {
+                    p.SetActive(false); // Désactiver les planètes pour la transition
+
+                }
+            }
+            else
+            {
+                Debug.LogError("BackgroundChanger component is missing on videoTranstitionPrefab.");
+            }
             GameObject ship = Instantiate(shipTransitionPrefab, new Vector3(-35f, -1, 0), Quaternion.Euler(0, 0, 10.785f));
             ship.GetComponent<SpriteRenderer>().sortingOrder = 10000;
             SpriteRenderer[] renderers = ship.GetComponentsInChildren<SpriteRenderer>(true); // true pour inclure les objets inactifs
             foreach (var rend in renderers)
             {
                 rend.sortingOrder = 10000;
+                rend.color = new Color(rend.color.r, rend.color.g, rend.color.b, 0f); // Rendre transparent
             }
             ship.GetComponent<TransitionVaisseau>().nextSceneName = "BonusScene";
         }

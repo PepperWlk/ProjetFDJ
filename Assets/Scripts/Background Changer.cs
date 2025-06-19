@@ -3,7 +3,7 @@ using UnityEngine.Video;
 
 public class BackgroundChanger : MonoBehaviour
 {
-    public VideoPlayer TransitionVideo;
+    public ParticleSystem TransitionVideo;
 
     public void ChangeActivity()
     {
@@ -23,7 +23,6 @@ public class BackgroundChanger : MonoBehaviour
         if (TransitionVideo != null)
         {
             TransitionVideo.gameObject.SetActive(true);
-            TransitionVideo.Play();
         }
         else
         {

@@ -455,7 +455,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 8.717, y: -12.2}
+  m_AnchoredPosition: {x: 0.000020027, y: -11.5}
   m_SizeDelta: {x: 339.9563, y: 81.6793}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &585033966
@@ -1147,8 +1147,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentPhase: 0
+  linePrefab: {fileID: 0}
   Allplanets: []
   scoreValue: {fileID: 585033966}
+  rollingScore: {fileID: 0}
+  groupColorChanger: []
+  videoTranstitionPrefab: {fileID: 0}
+  shipTransitionPrefab: {fileID: 0}
   totalAsteroid: 9
   DestroyedAsteroid: 0
 --- !u!4 &1690676296

@@ -202,7 +202,7 @@ public class Scoring : MonoBehaviour
         }
         if (scoreValue != null)
         {
-            scoreValue.text = score.ToString("D5"); // Afficher le score avec 5 chiffres
+            scoreValue.text = score.ToString(); // Afficher le score avec 5 chiffres
         }
         else
         {

@@ -1,5 +1,3 @@
-Voici un exemple de README clair, propre et professionnel, sans émojis, adapté à ton projet :
-
 ---
 
 # Projet de jeu d’argent – FDJ (Unity 2D)
